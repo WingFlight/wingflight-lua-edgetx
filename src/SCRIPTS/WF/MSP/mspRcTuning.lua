@@ -65,7 +65,7 @@ local function getRcTuning(callback, callbackParam, data)
     local message = {
         command = 111, -- MSP_RC_TUNING
         processReply = function(self, buf)
-            buf.offset = buf.offset + 1 -- was rates_type (dead, firmware always sends 0)
+            wf.mspHelper.readU8(buf) -- was rates_type (dead, firmware always sends 0)
             data = getRateDefaults(data)
             data.roll_rcRates.value = wf.mspHelper.readU8(buf)
             data.roll_rcExpo.value = wf.mspHelper.readU8(buf)
@@ -98,7 +98,8 @@ local function getRcTuning(callback, callbackParam, data)
             data.yaw_dynamic_ceiling_gain.value = wf.mspHelper.readU8(buf)
             data.yaw_dynamic_deadband_gain.value = wf.mspHelper.readU8(buf)
             data.yaw_dynamic_deadband_filter.value = wf.mspHelper.readU8(buf)
-            buf.offset = buf.offset + 2 -- was cyclic_ring, cyclic_polar (dead)
+            wf.mspHelper.readU8(buf) -- was cyclic_ring (dead)
+            wf.mspHelper.readU8(buf) -- was cyclic_polar (dead)
             callback(callbackParam, data)
         end,
         simulatorResponse = { 0, 50, 40, 24, 0, 0, 0, 50, 40, 24, 0, 0, 0, 80, 50, 24, 0, 0, 0, 100, 0, 24, 0, 0, 0, 0, 15, 0, 15, 0, 90, 0, 15, 30, 30, 60, 0 }

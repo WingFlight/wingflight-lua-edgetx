@@ -1,4 +1,5 @@
 LICENSE text eol=lf
+.gitattributes text eol=lf
 *.md text eol=lf
 *.c text eol=lf
 *.cc text eol=lf
@@ -13,6 +14,7 @@ Makefile text eol=lf
 *.mk text eol=lf
 *.nomk text eol=lf
 *.pl text eol=lf
+*.py text eol=lf
 *.js text eol=lf
 *.json text eol=lf
 *.html text eol=lf

@@ -89,11 +89,6 @@ fields[16] = { t = "Current PID profile",             x = x,          y = incY(l
 fields[17] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
 fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = incY(lineSpacing), preEdit = copyProfile }
 
-incY(lineSpacing * 0.5)
-labels[#labels + 1] = { t = "HSI Offset Gain",        x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.roll_o }
-fields[#fields + 1] = { t = "Pitch",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pids.pitch_o }
-
 local function receivedPidTuning(page, data)
     wf.onPageReady(page)
 end

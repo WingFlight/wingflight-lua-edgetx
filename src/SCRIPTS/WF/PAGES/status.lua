@@ -58,7 +58,7 @@ local function armingDisableFlagsToString(flags)
             if i == 2 then t = t .. "RX Fail Safe" end
             if i == 3 then t = t .. "Bad RX Recovery" end
             if i == 4 then t = t .. "Box Fail Safe" end
-            if i == 5 then t = t .. "Governor" end
+            if i == 5 then t = t .. "Reserved" end -- was heli governor; bit is never set on this firmware
             if i == 6 then t = t .. "RPM Signal" end
             if i == 7 then t = t .. "Throttle" end
             if i == 8 then t = t .. "Angle" end

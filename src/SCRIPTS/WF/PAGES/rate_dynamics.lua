@@ -51,26 +51,12 @@ if wf.apiVersion >= 12.08 then
     fields[#fields + 1] = { t = setpointBoostCutoff,   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_setpoint_boost_cutoff }
 end
 
-labels[#labels + 1] = { t = "Collective Dynamics", x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.collective_response_time }
-fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.collective_accel_limit }
-if wf.apiVersion >= 12.08 then
-    fields[#fields + 1] = { t = setpointBoostGain,     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.collective_setpoint_boost_gain }
-    fields[#fields + 1] = { t = setpointBoostCutoff,   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.collective_setpoint_boost_cutoff }
-end
-
 if wf.apiVersion >= 12.08 then
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Dynamic",             x = x,          y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Ceiling gain",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_dynamic_ceiling_gain }
     fields[#fields + 1] = { t = "Deadband gain",       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_dynamic_deadband_gain }
     fields[#fields + 1] = { t = "Deadband filter",     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_dynamic_deadband_filter }
-end
-
-if wf.apiVersion >= 12.09 then
-    incY(lineSpacing * 0.5)
-    fields[#fields + 1] = { t = "Cyclic ring",         x = x,          y = incY(lineSpacing), sp = x + sp, data = rcTuning.cyclic_ring }
-    fields[#fields + 1] = { t = "Polar coordinates",   x = x,          y = incY(lineSpacing), sp = x + sp, data = rcTuning.cyclic_polar }
 end
 
 local function receivedRcTuning(page)
@@ -83,7 +69,7 @@ return {
         wf.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)
-        if rcTuning.rates_type.value then
+        if rcTuning.roll_response_time.value then
             wf.useApi("mspRcTuning").write(rcTuning)
             wf.settingsSaved(true, false)
         end

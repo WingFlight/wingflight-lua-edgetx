@@ -30,8 +30,8 @@ local endRateEditing = function(field, page)
 end
 
 local function copyProfile(field, page)
-    local source = page.fields[14].data.value
-    local dest = page.fields[15].data.value
+    local source = page.fields[13].data.value
+    local dest = page.fields[14].data.value
     if source == dest then return end
 
     local mspCopyProfile = {
@@ -55,7 +55,6 @@ local function buildForm()
     labels[#labels + 1] = { t = "Roll",  x = x, y = incY(tableSpacing.row) }
     labels[#labels + 1] = { t = "Pitch", x = x, y = incY(tableSpacing.row) }
     labels[#labels + 1] = { t = "Yaw",   x = x, y = incY(tableSpacing.row) }
-    labels[#labels + 1] = { t = "Coll",  x = x, y = incY(tableSpacing.row) }
 
     x = x + tableSpacing.col
     y = tableStartY
@@ -64,7 +63,6 @@ local function buildForm()
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.roll_rcRates }
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.pitch_rcRates }
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.yaw_rcRates }
-    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.collective_rcRates }
 
     x = x + tableSpacing.col
     y = tableStartY
@@ -73,7 +71,6 @@ local function buildForm()
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.roll_rates }
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.pitch_rates }
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.yaw_rates }
-    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.collective_rates }
 
     x = x + tableSpacing.col
     y = tableStartY
@@ -82,15 +79,11 @@ local function buildForm()
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.roll_rcExpo }
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.pitch_rcExpo }
     fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.yaw_rcExpo }
-    fields[#fields + 1] = {              x = x, y = incY(tableSpacing.row), data = rcTuning.collective_rcExpo }
 
     x = margin
     incY(lineSpacing * 0.5)
-    fields[13] = { t = "Rates type",     x = x, y = incY(lineSpacing), sp = x + sp, data = rcTuning.rates_type, postEdit = function(self, page) page.updateRatesType(page) end }
-
-    incY(lineSpacing * 0.5)
-    fields[14] = { t = "Current rate profile",            x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.currentRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
-    fields[15] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.destRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
+    fields[13] = { t = "Current rate profile",            x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.currentRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = startEditing, postEdit = endRateEditing }
+    fields[14] = { t = "Destination profile",             x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { min = 0, max = 5, value = rcTuning.destRateProfile, table = { [0] = "1", "2", "3", "4", "5", "6" } } }
     fields[#fields + 1] = { t = "[Copy Current to Dest]", x = x + indent, y = incY(lineSpacing), preEdit = copyProfile }
     --wf.showMemoryUsage("after buildform")
 end
@@ -119,7 +112,7 @@ return {
         wf.useApi("mspRcTuning").read(receivedRcTuning, self, rcTuning)
     end,
     write = function(self)
-        if rcTuning.rates_type.value then
+        if rcTuning.roll_rcRates.value then
             wf.useApi("mspRcTuning").write(rcTuning)
             wf.settingsSaved(true, false)
         end
@@ -127,12 +120,6 @@ return {
     title       = "Rates",
     labels      = labels,
     fields      = fields,
-
-    updateRatesType = function(self, applyDefaults)
-        wf.useApi("mspRcTuning").getRateDefaults(rcTuning, rcTuning.rates_type.value)
-        rebuildForm(self)
-        wf.onPageReady(self)
-    end,
 
     timer = function(self)
         if profileAdjustmentTS and wf.clock() - profileAdjustmentTS > 0.35 then
@@ -143,7 +130,7 @@ return {
     end,
 
     onProcessedMspStatus = function(self, status)
-        local currentField = self.fields[14]
+        local currentField = self.fields[13]
         if currentField.data.value ~= status.rateProfile and not editing then
             if currentField.data.value then
                 profileAdjustmentTS = wf.clock()
@@ -151,7 +138,7 @@ return {
             currentField.data.value = status.rateProfile
             rcTuning.currentRateProfile = status.rateProfile
         end
-        local destField = self.fields[15]
+        local destField = self.fields[14]
         if not destField.data.value then
             if status.rateProfile < 5 then
                 destField.data.value = status.rateProfile + 1

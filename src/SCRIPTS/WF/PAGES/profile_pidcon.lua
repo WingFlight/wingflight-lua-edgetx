@@ -25,21 +25,17 @@ fields[#fields + 1] = { t = "I-term relax type",       x = x,          y = incY(
 fields[#fields + 1] = { t = "Cutoff point R",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_roll }
 fields[#fields + 1] = { t = "Cutoff point P",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_pitch }
 fields[#fields + 1] = { t = "Cutoff point Y",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_yaw }
-labels[#labels + 1] = { t = "Error Decay Ground",      x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Time",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_ground }
-labels[#labels + 1] = { t = "Error Decay Cyclic",      x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Time",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_cyclic }
-fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_limit_cyclic }
-labels[#labels + 1] = { t = "Error Decay Yaw",         x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Time",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_time_yaw }
-fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_decay_limit_yaw }
+labels[#labels + 1] = { t = "I-term Decay",            x = x,          y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Time",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time }
+fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_limit }
 labels[#labels + 1] = { t = "Error Limit",             x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_limit_roll }
 fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_limit_pitch }
 fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_limit_yaw }
-labels[#labels + 1] = { t = "HSI Offset Limit",        x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.offset_limit_roll }
-fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.offset_limit_pitch }
+labels[#labels + 1] = { t = "Attitude Hold",           x = x,          y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.atthold_gain }
+fields[#fields + 1] = { t = "Deadband",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.atthold_deadband }
+fields[#fields + 1] = { t = "Max rate",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.atthold_max_rate }
 
 incY(lineSpacing * 0.25)
 labels[#labels + 1] = { t = "PID Controller",          x = x,          y = incY(lineSpacing) }

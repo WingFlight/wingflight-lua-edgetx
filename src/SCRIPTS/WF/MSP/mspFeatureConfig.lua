@@ -15,6 +15,6 @@ end
 return {
     getFeatureConfig = getFeatureConfig,
     telemetryIsEnabled = function(bitfield)
-        return bit32.btest(bitfield, 10)
+        return bit32.btest(bitfield, bit32.lshift(1, 10)) -- FEATURE_TELEMETRY = BIT(10)
     end
 }

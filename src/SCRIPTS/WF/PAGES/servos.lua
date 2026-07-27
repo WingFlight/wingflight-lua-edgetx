@@ -71,7 +71,12 @@ local function onClickOverride(field, page)
     end
 end
 
-fields[1] = { t = "Servo",      x = x,          y = incY(lineSpacing), sp = x + sp, data = { min = 0, max = 7, table = { [0] = "ELEVATOR", "CYCL L", "CYCL R", "TAIL", "5", "6", "7", "8" } }, postEdit = onChangeServo }
+-- Servo output index is a generic 0-based slot (PWM servos followed by bus servos, if
+-- configured) -- which function each one performs is assigned via the mixer rules, not a
+-- fixed per-index meaning, so this just labels slots numerically (1-based for display).
+local servoIndexLabels = { [0] = "1" }
+for i = 1, 25 do servoIndexLabels[i] = tostring(i + 1) end
+fields[1] = { t = "Servo",      x = x,          y = incY(lineSpacing), sp = x + sp, data = { min = 0, max = 25, table = servoIndexLabels }, postEdit = onChangeServo }
 fields[2] = { t = "Center",     x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMid", preEdit = onPreEditCenter, change = onChangeCenter, postEdit = onPostEditCenter }
 fields[3] = { t = "Min",        x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMin" }
 fields[4] = { t = "Max",        x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMax" }

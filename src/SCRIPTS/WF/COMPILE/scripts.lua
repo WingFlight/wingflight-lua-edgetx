@@ -94,6 +94,8 @@ local scripts = {
     "/SCRIPTS/WF/PAGES/helpers/rateSwitcher.lua",
     "/SCRIPTS/WF/PAGES/helpers/settingsHelper.lua",
     "/SCRIPTS/WF/PAGES/mixer.lua",
+    "/SCRIPTS/WF/PAGES/mixer_inputs.lua",
+    "/SCRIPTS/WF/PAGES/mixer_rules.lua",
     "/SCRIPTS/WF/PAGES/model.lua",
     "/SCRIPTS/WF/PAGES/profile_pidcon.lua",
     "/SCRIPTS/WF/PAGES/profile_pids.lua",

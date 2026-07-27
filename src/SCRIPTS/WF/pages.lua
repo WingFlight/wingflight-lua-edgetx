@@ -19,6 +19,8 @@ if wf.apiVersion >= 12.09 then
 end
 addPage("showServos", "Servos", "servos", true)
 addPage("showMixer", "Mixer", "mixer", true)
+addPage("showMixerInputs", "Mixer Inputs", "mixer_inputs", false)
+addPage("showMixerRules", "Mixer Rules", "mixer_rules", false)
 addPage("showGyroFilters", "Gyro Filters", "filters", true)
 addPage("showAccelerometerTrim", "Accelerometer Trim", "accelerometer", true)
 addPage("showEscSensor", "ESC Sensor", "esc_sensor", true)

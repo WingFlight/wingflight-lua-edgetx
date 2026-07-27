@@ -5,6 +5,9 @@ on:
     tags:
       - 'testing/*'
 
+permissions:
+  contents: write
+
 jobs:
 
   build:

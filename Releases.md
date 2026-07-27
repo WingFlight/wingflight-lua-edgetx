@@ -1,247 +1,42 @@
-# 2.3.0
+# 0.0.10
 
-This is the *Official Release* of the *Rotorflight 2.3.0 Lua Scripts for EdgeTX and OpenTX*.
+This is the first _development snapshot_ of the Wingflight Lua Scripts for EdgeTX and OpenTX.
+
+## Notes
+
+Wingflight is a fork of Rotorflight, refocused exclusively on fixed-wing aircraft. This
+tool is the fixed-wing counterpart of Rotorflight's EdgeTX/OpenTX Lua scripts, rebuilt
+against wingflight-firmware and entering the shared Wingflight release numbering already
+at 0.0.10, alongside the firmware and the Ethos Lua suite.
+
+This version is intended to be used for beta-testing only. It is not fully working nor
+stable, and should not be used by end-users.
+
+For more information, please join the [Wingflight Discord](https://discord.gg/aEyyAJTXRw/) chat.
+
+## Changes since forking from Rotorflight
+
+- Renamed the tool and its Lua namespace from `RF2`/`rf2` to `WF`/`wf`, and the Tools-menu
+  entry from *Rotorflight 2* to *WingFlight*.
+- Removed the *Governor*, *Profile - Governor* and *Profile - Rescue* pages and their MSP
+  calls: the corresponding heli-only MSP commands no longer exist on wingflight-firmware.
+- Rebuilt the *Mixer* page and MSP layer for wingflight-firmware's rule-based mixer
+  (replacing Rotorflight's helicopter swashplate mixer): added *Mixer Inputs* and
+  *Mixer Rules* pages backed by the firmware's `MSP_MIXER_INPUTS`/`MSP_MIXER_RULES` API.
+- Realigned the PID profile fields with the firmware's current wire format: renamed fields
+  the firmware repurposed for fixed-wing use (I-term decay, Attitude Hold gain/deadband),
+  dropped now-dead heli-only fields (cyclic cross-coupling, tail-rotor stop gains, etc.)
+  from the UI, and added the new fixed-wing fields the firmware sends (TPA gain/curve,
+  master gains, auto-hover, cross-axis relax).
+- Fixed the Rates page to stop relying on the firmware's now-inert rate-curve-flavor
+  selector, and removed the dead heli collective-axis and cyclic ring/polar fields.
+- Added a VS Code deploy workflow for copying the scripts straight to an EdgeTX radio's
+  SD card during development.
 
 ## Downloads
 
 The download locations are:
 
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.3.0)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.3.0)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.3.0)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.3.0)
-- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.3.0)
-
-## Notes
-
-Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
-
-## Changes Since Version 2.2.1
-
-- Added Rotorflight Widgets
-  - *RF Tool*: shows the model name and other info and lets you configure your heli when in full screen mode. *RF Tool* also integrates *rf2bg*, so there's no need to run *rf2bg* using a special function anymore when using this widget.
-  - *RF Stats*: shows *Total flights* and *Total time* when model statistics are enabled.
-- *Model* page
-  - Added support for per model statistics like *Total flights* and *Total time*.
-  - When *Set name on TX* is used to automatically set the model name on your transmitter, *rf2bg* will revert to the name you specified on the transmitter when no model is connected (instead of '>Rotorflight')
-- *rf2bg* background script
-  - Custom CRSF telemetry sensors can now be deleted and discovered at any time.
-  - No need to follow a special procedure anymore to get the sensors in the correct order.
-- Inmproved FrSky Smart Port telemetry support featuring user-friendly sensor names.
-- *Battery* page: new page for configuring and specifying your batteries.
-- *ESC Sensor* page: new page for configuring ESC telemetry.
-- *Governor* page: added support for the new Rotorflight governor.
-- *Rates* page: added support for *Rotorflight* rates.
-- *Rate Dynamics* page: added support for *Cyclic ring* and *Polar coordinates*.
-- *Smart Fuel* page: new page for configuring *Smart Fuel*.
-- *AM32 ESC* page: new page for configuring AM32 ESCs.
-- *BLHeli_S ESC* page: new page for configuring BLHeli_S ESCs.
-- *Bluejay ESC* page: new page for configuring Bluejay ESCs.
-- *FLYROTOR ESC* page: updated parameters.
-- *HW Platinum V5* page: improved support for various Hobbywing Platinum V5 ESCs, including support for the Stratos 200 ESC.
-- Added support for configuring *OMP* and *ZTW* ESCs.
-- Added support for the *Radiomaster TX16S MK3*.
-- Added partial support for the *FlySky PA01*.
-- Improved Touch UI with a new sleek *Save* button.
-- Reduced memory usage.
-- Various minor fixes.
-
-
-
-***
-
-# 2.2.1
-
-This is a maintenance release containing minor bug fixes.
-
-## Downloads
-
-The download locations are:
-
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.1)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.1)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.1)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.1)
-- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.1)
-
-## Notes
-
-Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
-
-## Changes from 2.2.0
-
-- Added touch UI support for EdgeTX 2.11+. Use the `SYS` key to bring up the Save menu.
-- Improved support for FLYROTOR ESC
-- Various minor fixes
-
-
-
-***
-
-# 2.2.0
-
-This is the 2.2.0 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
-
-## Downloads
-
-The download locations are:
-
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.2.0)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.2.0)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.2.0)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.2.0)
-- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.2.0)
-
-## Notes
-
-Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
-
-## rf2bg
-
-The `rf2bg` background script will do a couple of things:
-- Set the clock on the flight controller, so your log files have the correct timestamp.
-- Enable CRSF/ELRS custom telemetry, if the model is configured to use that.
-- Optionally tell you what adjustment you just made, if any.
-
-If you want to use any of these features, make sure you've defined and enabled a special function running `rf2bg`, with *Repeat* set to *On*.
-
-## Changes from 2.1.1
-
-- Added page *Rate Dynamics*
-- Added page *PID Controller Settings*
-- Added new RF 2.2 settings to existing pages
-- Added units to most settings
-- Better support for EdgeTX 2.11
-- Reduced memory usage
-- Various minor fixes
-
-
-
-***
-
-# 2.1.1
-
-This is a maintenance release containing minor bug fixes.
-
-## Changes from 2.1.0
-
-- Removed custom script for running custom CRSF/ELRS telemetry
-- Fixed ordering issue with custom CRSF/ELRS telemetry
-- Fixed issue with displaying integers on EdgeTX 2.11
-
-The rf2tlm script for running custom CRSF/ELRS telemetry has now been incorporated in rf2bg. That means that you can delete the custom script running rf2tlm from your transmitter. Also make sure you've defined and enabled a special function running rf2bg, with *Repeat* set to *On*. If you don't have that, custom telemetry won't work.
-
-To get the custom CRSF/ELRS sensors in the order as defined in the Configurator, follow these steps:
-- Switch off the flight controller and the receiver
-- *Delete all* sensors on the transmitter
-- Select *Discover new* on the transmitter
-- Power on the flight controller and wait till all sensors are populated
-
-
-
-***
-
-# 2.1.0
-
-This is the 2.1.0 release of the *Rotorflight Lua Scripts for EdgeTX and OpenTX*.
-
-## Downloads
-
-The download locations are:
-
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.1.0)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.1.0)
-- [Lua Scripts for EdgeTX and OpenTX](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.1.0)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.1.0)
-- [Lua Suite for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos-suite/releases/tag/release/2.1.0)
-
-## Notes
-
-- Rotorflight setup instructions can be found on the Rotorflight website [www.rotorflight.org](https://www.rotorflight.org/).
-- Rotorflight 2.1 *is* backward compatible with Rotorflight 2.0. You *can* load your configuration dump from Rotorflight 2.0 into 2.1.
-- If updating from Rotorflight 1, please setup your helicopter from scratch. Follow the instructions on the website.
-- As always, please double check your configuration on the bench before flying!
-
-## Changes from 2.0.0
-
-- Added support for custom CRSF/ELRS telemetry
-- Added support for 480x320 (Jumper T15)
-- Added automatic profile switching to all *Profile* pages
-- Added a *Status* page which
-  - Shows the currently active PID and rate profile numbers
-  - Shows *Arming Disabled Flags*, if any
-  - Shows the amount of free space on a dataflash, if available. It also offers the option to erase the dataflash.
-  - Shows Real-time and CPU load
-- The *PIDs* and *Rates* pages
-  - Now also show the currently active profile
-  - You can change and copy the currently active profile
-- *Servo* page
-  - Changing the center of a servo now automatically sets servo override for the servo being editted
-  - Added button *Override All Servos*
-- Added *Model on TX* page, with which you can automatically set model name, timers or global variables on your transmitter. Data is stored on the heli, so you can have different timers for your helis while using just one model on the transmitter.
-- *Profile - Governor* page: added *Min throttle*
-- Added *Experimental* page for firmware testing purposes
-- Added page *ESC - FlyRotor*
-- Added page *ESC - HW Platinum V5*
-- Added page *ESC - Scorpion Tribunus*
-- Added page *ESC - YGE*
-- Added *Settings* page for hiding irrelevant pages
-- Changing a value using the scroll wheel will go quicker if you scroll fast
-- If you try to Save while armed a warning will be given
-- Reformatted the *Rescue* page, so the different rescue stages are now more clear
-- Improved accessibility by reordering some pages and fields
-- Improved MSP handling and processing
-- *Adjustment Teller*: added support for accelerometer adjustments
-
-
-
-***
-
-# 2.0.0
-
-This is the 2.0.0 release of the Rotorflight Lua Scripts for EdgeTx/OpenTx.
-
-
-## Instructions
-
-For instructions and other details, please read the [README](https://github.com/rotorflight/rotorflight-lua-scripts#readme).
-
-
-## Downloads
-
-The official download locations for Rotorflight 2.0.0 are:
-
-- [Rotorflight Configurator](https://github.com/rotorflight/rotorflight-configurator/releases/tag/release/2.0.0)
-- [Rotorflight Blackbox](https://github.com/rotorflight/rotorflight-blackbox/releases/tag/release/2.0.0)
-- [Lua Scripts for EdgeTx and OpenTx](https://github.com/rotorflight/rotorflight-lua-scripts/releases/tag/release/2.0.0)
-- [Lua Scripts for FrSky Ethos](https://github.com/rotorflight/rotorflight-lua-ethos/releases/tag/release/2.0.0)
-
-
-## Notes
-
-1. There is a new website [www.rotorflight.org](https://www.rotorflight.org/) for Rotorflight 2.
-   The old Wiki in GitHub is deprecated and is for Rotorflight 1 only.
-   Big thanks to the documentation team for setting this up!
-
-1. Rotorflight 2 is **NOT** backward compatible with RF1. You **MUST NOT** load your configuration dump from RF1 into RF2.
-
-1. If coming from RF1, please setup your helicopter from scratch for RF2. Follow the instructions on the website!
-
-1. As always, please double check your configuration on the bench before flying!
-
-
-## Support
-
-The main source of Rotorflight information and instructions is now the [website](https://www.rotorflight.org/).
-
-Rotorflight has a strong presence on the Discord platform - you can join us [here](https://discord.gg/FyfMF4RwSA/).
-Discord is the primary location for support, questions and discussions. The developers are all active there,
-and so are the manufacturers of RF Flight Controllers. Many pro pilots are also there.
-This is a great place to ask for advice or discuss any complicated problems or even new ideas.
-
-There is also a [Rotorflight Facebook Group](https://www.facebook.com/groups/876445460825093) for hanging out with other Rotorflight pilots.
-
-
-## Changes
-
-A full changelog can be found online.
+- [Wingflight Firmware](https://github.com/WingFlight/wingflight-firmware/releases/tag/snapshot/0.0.10)
+- [Wingflight Configurator](https://github.com/WingFlight/wingflight-configurator/releases/tag/snapshot/0.0.10)
+- [Wingflight Lua Suite for FrSky Ethos](https://github.com/WingFlight/wingflight-lua-ethos-suite/releases/tag/snapshot/0.0.10)

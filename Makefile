@@ -2,7 +2,7 @@
 VARIANT ?= obj
 VERSION ?= 0.0.0
 
-ZIPFILE ?= rotorflight-lua-scripts-$(VARIANT)-$(VERSION).zip
+ZIPFILE ?= wingflight-lua-edgetx-$(VARIANT)-$(VERSION).zip
 
 
 .PHONY:	all files package clean
@@ -19,5 +19,5 @@ package:
 		zip -q -r ../$(ZIPFILE) *
 
 clean:
-	@rm -rf obj test release snapshot $(VARIANT) rotorflight-*.zip
+	@rm -rf obj test release snapshot $(VARIANT) wingflight-*.zip
 

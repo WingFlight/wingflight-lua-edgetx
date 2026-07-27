@@ -1,0 +1,7 @@
+{
+    "tgt_name": "WF",
+    "sdcard_marker_folders": ["SCRIPTS", "MODELS", "RADIO", "THEMES", "SOUNDS"],
+    "sdcard_marker_min_matches": 2,
+    "manual_drive_path": null,
+    "simulator_sdcard_path": null
+}

@@ -43,9 +43,12 @@ luac.out
 .project
 
 # Visual Studio Code
-.vscode
+.vs/
+
+# Python (deploy tooling under .vscode/scripts)
+__pycache__/
+*.pyc
 
 # Directories
 tmp
 obj
-.vs/

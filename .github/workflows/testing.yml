@@ -28,7 +28,7 @@ jobs:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: rotorflight-lua-scripts-testing-${{ env.GIT_VER }}
+        name: wingflight-lua-edgetx-testing-${{ env.GIT_VER }}
         path: ./obj
 
     - name: Delete tag

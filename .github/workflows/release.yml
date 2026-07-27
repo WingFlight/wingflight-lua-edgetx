@@ -34,12 +34,12 @@ jobs:
         cat ${GITHUB_ENV}
 
     - name: Make release package
-      run: make package ZIPFILE="rotorflight-lua-scripts-${{ env.GIT_VER }}.zip"
+      run: make package ZIPFILE="wingflight-lua-edgetx-${{ env.GIT_VER }}.zip"
 
     - name: Create Release
       run: |
         .github/scripts/extract-release-notes.py "${{ env.GIT_VER }}" Releases.md > Notes.md
-        gh release create ${{ env.GIT_TAG }} --notes-file Notes.md --title "Rotorflight Lua Scripts - ${{ env.GH_TYPE }} ${{ env.GIT_VER }}" *.zip
+        gh release create ${{ env.GIT_TAG }} --notes-file Notes.md --title "WingFlight Lua Scripts - ${{ env.GH_TYPE }} ${{ env.GIT_VER }}" *.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

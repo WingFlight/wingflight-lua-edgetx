@@ -1,0 +1,112 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Deploy to Radio",
+            "type": "process",
+            "command": "python",
+            "osx": {
+                "command": "${config:python.defaultInterpreterPath}"
+            },
+            "args": [
+                "${workspaceFolder}/.vscode/scripts/deploy.py",
+                "--radio"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "Deploy to Radio [Force Full Copy]",
+            "type": "process",
+            "command": "python",
+            "osx": {
+                "command": "${config:python.defaultInterpreterPath}"
+            },
+            "args": [
+                "${workspaceFolder}/.vscode/scripts/deploy.py",
+                "--radio",
+                "--force"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "Deploy to Simulator",
+            "type": "process",
+            "command": "python",
+            "osx": {
+                "command": "${config:python.defaultInterpreterPath}"
+            },
+            "args": [
+                "${workspaceFolder}/.vscode/scripts/deploy.py",
+                "--simulator"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "List detected drives",
+            "type": "process",
+            "command": "python",
+            "osx": {
+                "command": "${config:python.defaultInterpreterPath}"
+            },
+            "args": [
+                "${workspaceFolder}/.vscode/scripts/drive_detect.py"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "Clear locks",
+            "type": "process",
+            "command": "python",
+            "osx": {
+                "command": "${config:python.defaultInterpreterPath}"
+            },
+            "args": [
+                "${workspaceFolder}/.vscode/scripts/deploy.py",
+                "--clear-lock"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "Build (bin/build.sh)",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "bin/build.sh"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        }
+    ]
+}

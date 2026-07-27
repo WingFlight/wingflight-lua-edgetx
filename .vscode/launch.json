@@ -1,0 +1,67 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Deploy to Radio",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/scripts/dummy.py",
+            "console": "integratedTerminal",
+            "subProcess": false,
+            "justMyCode": true,
+            "stopOnEntry": false,
+            "preLaunchTask": "Deploy to Radio"
+        },
+        {
+            "name": "Deploy to Radio [Force Full Copy]",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/scripts/dummy.py",
+            "console": "integratedTerminal",
+            "subProcess": false,
+            "justMyCode": true,
+            "stopOnEntry": false,
+            "preLaunchTask": "Deploy to Radio [Force Full Copy]"
+        },
+        {
+            "name": "Deploy to Simulator",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/scripts/dummy.py",
+            "console": "integratedTerminal",
+            "subProcess": false,
+            "justMyCode": true,
+            "stopOnEntry": false,
+            "preLaunchTask": "Deploy to Simulator"
+        },
+        {
+            "name": "List detected drives",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/scripts/dummy.py",
+            "console": "integratedTerminal",
+            "subProcess": false,
+            "justMyCode": true,
+            "stopOnEntry": false,
+            "preLaunchTask": "List detected drives"
+        },
+        {
+            "name": "Clear locks",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/scripts/dummy.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "preLaunchTask": "Clear locks"
+        },
+        {
+            "name": "Build (bin/build.sh)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/scripts/dummy.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "preLaunchTask": "Build (bin/build.sh)"
+        }
+    ]
+}

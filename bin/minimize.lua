@@ -7,29 +7,29 @@ print("Minimizing script memory usage...")
 
 local genericReplacements = {
     {
-        -- Replace rf2.call with pcall. Comment out for debugging minimized scripts.
-        files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
-        match = "rf2%.call",
-        replace = "rf2%.call",
+        -- Replace wf.call with pcall. Comment out for debugging minimized scripts.
+        files = { "/SCRIPTS/WF/", "/WIDGETS/" },
+        match = "wf%.call",
+        replace = "wf%.call",
         replacement = "pcall"
     },
     {
         -- Remove debug info from release builds.
-        files = "/SCRIPTS/RF2/COMPILE/compile.lua",
+        files = "/SCRIPTS/WF/COMPILE/compile.lua",
         match = "loadScript%(script, %'cd%'%)",
         replace = "loadScript%(script, %'cd%'%)",
         replacement = "loadScript(script, 'c')"
     },
     {
         -- Replace --[NIR with --[[ to comment out debug code that should not be in a release
-        files = { "/SCRIPTS/RF2/", "/WIDGETS/" },
+        files = { "/SCRIPTS/WF/", "/WIDGETS/" },
         match = "--%[NIR",
         replace = "--%[NIR",
         replacement = "--[["
     },
     {
-        -- Remove id = "xxx" from the fields table in page files. This id is not used by the official Rotorflight scripts.
-        files = "/SCRIPTS/RF2/PAGES/",
+        -- Remove id = "xxx" from the fields table in page files. This id is not used by the official WingFlight scripts.
+        files = "/SCRIPTS/WF/PAGES/",
         match = "^%s-fields%[",
         replace = ",%s-id = \"(.-)\"",
         replacement = ""
@@ -37,44 +37,44 @@ local genericReplacements = {
     {
         -- Remove 'name = "xxx", ' from the adjfunctions fields table in adj_teller.lua.
         -- Names are only used for debugging and are expensive.
-        files = "/SCRIPTS/RF2/adj_teller.lua",
+        files = "/SCRIPTS/WF/adj_teller.lua",
         match = "name = \"(.-)\", ",
         replace = "name = \"(.-)\", ",
         replacement = ""
     },
     {
         -- Remove simulatorResponse = {...} from MSP APIs, since they are not used outside the simulator.
-        files = "/SCRIPTS/RF2/MSP/",
+        files = "/SCRIPTS/WF/MSP/",
         match = "simulatorResponse = {(.-)}",
         replace = "simulatorResponse = {(.-)},?",
         replacement = ""
     },
     {
         -- large files (>10K)  can't sometimes be compiled on some b&w radios without making it smaller. This is done by removing all double spaces.
-        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua", "/SCRIPTS/RF2/MSP/mspEscAm32.lua" },
+        files = { "/SCRIPTS/WF/adj_teller.lua", "/SCRIPTS/WF/wftlm_sensors.lua", "/SCRIPTS/WF/MSP/mspEscAm32.lua" },
         match = "  ",
         replace = "  ",
         replacement = ""
     },
     {
         -- This is also done by replacing ' = ' with '='.
-        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua", "/SCRIPTS/RF2/MSP/mspEscAm32.lua" },
+        files = { "/SCRIPTS/WF/adj_teller.lua", "/SCRIPTS/WF/wftlm_sensors.lua", "/SCRIPTS/WF/MSP/mspEscAm32.lua" },
         match = " = ",
         replace = " = ",
         replacement = "="
     },
     {
         -- This is also done by removing comments.
-        files = { "/SCRIPTS/RF2/adj_teller.lua", "/SCRIPTS/RF2/rf2tlm_sensors.lua", "/SCRIPTS/RF2/MSP/mspEscAm32.lua" },
+        files = { "/SCRIPTS/WF/adj_teller.lua", "/SCRIPTS/WF/wftlm_sensors.lua", "/SCRIPTS/WF/MSP/mspEscAm32.lua" },
         match = "%-%-.*",
         replace = "%-%-.*",
         replacement = ""
     },
     {
-        -- Remove 'rf2.lcdNeedsInvalidate*' since it isn't used on EdgeTX/OpenTX
-        files = { "/SCRIPTS/RF2/" },
-        match = "rf2%.lcdNeedsInvalidate.*",
-        replace = "rf2%.lcdNeedsInvalidate.*",
+        -- Remove 'wf.lcdNeedsInvalidate*' since it isn't used on EdgeTX/OpenTX
+        files = { "/SCRIPTS/WF/" },
+        match = "wf%.lcdNeedsInvalidate.*",
+        replace = "wf%.lcdNeedsInvalidate.*",
         replacement = ""
     },
 }
@@ -107,7 +107,7 @@ local function processFile(filename, genericReplacement)
 end
 
 local function processGenericReplacements()
-    local files = assert(loadfile("./SCRIPTS/RF2/COMPILE/scripts.lua"))
+    local files = assert(loadfile("./SCRIPTS/WF/COMPILE/scripts.lua"))
     local i = 1
     while true do
         local script = files(i)
@@ -133,16 +133,16 @@ processGenericReplacements()
 
 local mspRcTuningReplacements = {
     files = {
-        "SCRIPTS/RF2/MSP/mspRcTuning.lua",
-        "SCRIPTS/RF2/MSP/RATES/ACTUAL.lua",
-        "SCRIPTS/RF2/MSP/RATES/BETAFL.lua",
-        "SCRIPTS/RF2/MSP/RATES/KISS.lua",
-        "SCRIPTS/RF2/MSP/RATES/NONE.lua",
-        "SCRIPTS/RF2/MSP/RATES/QUICK.lua",
-        "SCRIPTS/RF2/MSP/RATES/RACEFL.lua",
-        "SCRIPTS/RF2/MSP/RATES/ROTORFL.lua",
-        "SCRIPTS/RF2/PAGES/rates.lua",
-        "SCRIPTS/RF2/PAGES/rate_dynamics.lua"
+        "SCRIPTS/WF/MSP/mspRcTuning.lua",
+        "SCRIPTS/WF/MSP/RATES/ACTUAL.lua",
+        "SCRIPTS/WF/MSP/RATES/BETAFL.lua",
+        "SCRIPTS/WF/MSP/RATES/KISS.lua",
+        "SCRIPTS/WF/MSP/RATES/NONE.lua",
+        "SCRIPTS/WF/MSP/RATES/QUICK.lua",
+        "SCRIPTS/WF/MSP/RATES/RACEFL.lua",
+        "SCRIPTS/WF/MSP/RATES/WINGFL.lua",
+        "SCRIPTS/WF/PAGES/rates.lua",
+        "SCRIPTS/WF/PAGES/rate_dynamics.lua"
     },
 
     { ".roll_rcRates", "[0]" },
@@ -186,7 +186,7 @@ local mspRcTuningReplacements = {
 }
 
 local mspPidTuningReplacements = {
-    files = { "SCRIPTS/RF2/MSP/mspPidTuning.lua", "SCRIPTS/RF2/PAGES/profile_pids.lua" },
+    files = { "SCRIPTS/WF/MSP/mspPidTuning.lua", "SCRIPTS/WF/PAGES/profile_pids.lua" },
 
     { ".roll_p", "[0]" },
     { ".roll_i", "[1]" },
@@ -208,7 +208,7 @@ local mspPidTuningReplacements = {
 }
 
 local mspPidProfileReplacements = {
-    files = { "SCRIPTS/RF2/MSP/mspPidProfile.lua", "SCRIPTS/RF2/PAGES/profile_various.lua", "SCRIPTS/RF2/PAGES/profile_pidcon.lua" },
+    files = { "SCRIPTS/WF/MSP/mspPidProfile.lua", "SCRIPTS/WF/PAGES/profile_various.lua", "SCRIPTS/WF/PAGES/profile_pidcon.lua" },
 
     { ".pid_mode", "[0]" },
     { ".error_decay_time_ground", "[1]" },
@@ -256,7 +256,7 @@ local mspPidProfileReplacements = {
 }
 
 local mspEscAm32Replacements = {
-    files = { "SCRIPTS/RF2/MSP/mspEscAm32.lua", "SCRIPTS/RF2/PAGES/esc_am32_form.lua" },
+    files = { "SCRIPTS/WF/MSP/mspEscAm32.lua", "SCRIPTS/WF/PAGES/esc_am32_form.lua" },
 
     { ".esc_signature", "[0]" },
     { ".esc_command", "[1]" },
@@ -312,7 +312,7 @@ local mspEscAm32Replacements = {
 }
 
 local mspEscBlheliSReplacements = {
-    files = { "SCRIPTS/RF2/MSP/mspEscBlheliS.lua", "SCRIPTS/RF2/PAGES/esc_blhelis_form.lua" },
+    files = { "SCRIPTS/WF/MSP/mspEscBlheliS.lua", "SCRIPTS/WF/PAGES/esc_blhelis_form.lua" },
 
     { ".esc_signature", "[0]" },
     { ".esc_command", "[1]" },
@@ -366,7 +366,7 @@ local mspEscBlheliSReplacements = {
 }
 
 local mspEscBluejayReplacements = {
-    files = { "SCRIPTS/RF2/MSP/mspEscBluejay.lua", "SCRIPTS/RF2/PAGES/esc_bluejay_form.lua" },
+    files = { "SCRIPTS/WF/MSP/mspEscBluejay.lua", "SCRIPTS/WF/PAGES/esc_bluejay_form.lua" },
 
 	{ ".esc_signature", "[0]" },
 	{ ".esc_command", "[1]" },
@@ -412,8 +412,8 @@ local mspEscBluejayReplacements = {
 	{ ".reserved_3c_3f", "[41]" },
 }
 
-local rf2tlm_sensorsReplacements = {
-    files = { "SCRIPTS/RF2/rf2tlm_sensors.lua" },
+local wftlm_sensorsReplacements = {
+    files = { "SCRIPTS/WF/wftlm_sensors.lua" },
 
     { "sid=0x", "[0]=0x" },  -- sid becomes [0]
     { ", name=", ", " },     -- name becomes [1]
@@ -434,8 +434,8 @@ local rf2tlm_sensorsReplacements = {
     },
 }
 
-local rf2tlmReplacements = {
-    files = { "SCRIPTS/RF2/rf2tlm.lua" },
+local wftlmReplacements = {
+    files = { "SCRIPTS/WF/wftlm.lua" },
 
     {
         "setTelemetryValue(sid, 0, 0, val, sensor.unit, sensor.prec, sensor.name)",
@@ -487,5 +487,5 @@ replace(mspPidProfileReplacements)
 replace(mspEscAm32Replacements)
 replace(mspEscBlheliSReplacements)
 replace(mspEscBluejayReplacements)
-replace(rf2tlm_sensorsReplacements)
-replace(rf2tlmReplacements)
+replace(wftlm_sensorsReplacements)
+replace(wftlmReplacements)

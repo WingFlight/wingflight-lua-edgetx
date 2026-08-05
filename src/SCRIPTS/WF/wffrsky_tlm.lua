@@ -13,6 +13,7 @@ local aliases = {
     { sourceName = "5123", aliasId = 0xEF23, aliasName = "ARMD", unit = UNIT_RAW, prec = 0 },
     { sourceName = "5124", aliasId = 0xEF24, aliasName = "Resc", unit = UNIT_RAW, prec = 0 },
     { sourceName = "5125", aliasId = 0xEF25, aliasName = "Gov",  unit = UNIT_RAW, prec = 0 },
+    { sourceName = "5126", aliasId = 0xEF26, aliasName = "OscL", unit = UNIT_RAW, prec = 0 },
     { sourceName = "5128", aliasId = 0xEF28, aliasName = "EscF", unit = UNIT_RAW, prec = 0 },
     { sourceName = "5129", aliasId = 0xEF29, aliasName = "Esc#", unit = UNIT_RAW, prec = 0 },
     { sourceName = "512B", aliasId = 0xEF2B, aliasName = "Es2#", unit = UNIT_RAW, prec = 0 },

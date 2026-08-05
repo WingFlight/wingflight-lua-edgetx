@@ -55,6 +55,15 @@ fields[#fields + 1] = { t = "Pitch strength",          x = x + indent, y = incY(
 fields[#fields + 1] = { t = "Level",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_level }
 fields[#fields + 1] = { t = "Cutoff",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_cutoff }
 
+incY(lineSpacing * 0.25)
+labels[#labels + 1] = { t = "Oscillation Limiter",     x = x,          y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Enable",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.osc_limiter }
+fields[#fields + 1] = { t = "Min Hz",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.osc_limiter_min_hz }
+fields[#fields + 1] = { t = "Max Hz",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.osc_limiter_max_hz }
+fields[#fields + 1] = { t = "Threshold",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.osc_limiter_threshold }
+fields[#fields + 1] = { t = "Gain floor",              x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.osc_limiter_floor }
+fields[#fields + 1] = { t = "Engage",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.osc_limiter_engage_ms }
+
 local function receivedPidProfile(page, _)
     wf.onPageReady(page)
 end

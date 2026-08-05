@@ -3,10 +3,11 @@
 -- discards whatever is written back); they are skip-read/written-as-filler here rather than
 -- exposed as data, so downstream PAGES files must not reference them. A number of new
 -- fixed-wing-only fields (fw_tpa_*, master_gain, autohover, cross_axis_relax, gain_curve,
--- atthold.max_rate) are appended at the end of the packet and are read/written here in full.
+-- atthold.max_rate, osc_limiter_*) are appended at the end of the packet and are read/written here in full.
 
 local function getDefaults()
     local data = {}
+    local offOn = { [0] = "OFF", "ON" }
     data.pid_mode = { min = 0, max = 250 }
     data.iterm_decay_time = { min = 0, max = 250, scale = 10, unit = wf.units.seconds }
     data.iterm_decay_limit = { min = 0, max = 250, unit = wf.units.degreesPerSecond }
@@ -52,6 +53,12 @@ local function getDefaults()
     data.gain_curve_pitch = { min = 0, max = 8 }
     data.gain_curve_yaw = { min = 0, max = 8 }
     data.atthold_max_rate = { min = 0, max = 1800, unit = wf.units.degreesPerSecond }
+    data.osc_limiter = { min = 0, max = 1, table = offOn }
+    data.osc_limiter_min_hz = { min = 1, max = 50, unit = wf.units.herz }
+    data.osc_limiter_max_hz = { min = 2, max = 100, unit = wf.units.herz }
+    data.osc_limiter_threshold = { min = 1, max = 250, unit = wf.units.degreesPerSecond }
+    data.osc_limiter_floor = { min = 10, max = 100, unit = wf.units.percentage }
+    data.osc_limiter_engage_ms = { min = 50, max = 2000, unit = wf.units.milliseconds }
     return data
 end
 
@@ -117,12 +124,19 @@ local function getPidProfile(callback, callbackParam, data)
             data.gain_curve_pitch.value = wf.mspHelper.readU8(buf)
             data.gain_curve_yaw.value = wf.mspHelper.readU8(buf)
             data.atthold_max_rate.value = wf.mspHelper.readU16(buf)
+            data.osc_limiter.value = wf.mspHelper.readU8(buf)
+            data.osc_limiter_min_hz.value = wf.mspHelper.readU8(buf)
+            data.osc_limiter_max_hz.value = wf.mspHelper.readU8(buf)
+            data.osc_limiter_threshold.value = wf.mspHelper.readU8(buf)
+            data.osc_limiter_floor.value = wf.mspHelper.readU8(buf)
+            data.osc_limiter_engage_ms.value = wf.mspHelper.readU16(buf)
             callback(callbackParam, data)
         end,
         simulatorResponse = {
             3, 0, 25, 0, 250, 0, 1, 12, 0, 1, 30, 30, 45, 50, 50, 100, 15, 15, 20, 0, 0, 0, 0, 0, 0, 0, 0,
             2, 10, 10, 15, 100, 100, 0, 0, 0, 20, 25, 40, 55, 40, 0, 0,
-            100, 0, 100, 0, 100, 0, 100, 0, 50, 30, 44, 1, 0, 30, 100, 10, 0, 0, 0, 0, 44, 1
+            100, 0, 100, 0, 100, 0, 100, 0, 50, 30, 44, 1, 0, 30, 100, 10, 0, 0, 0, 0, 44, 1,
+            0, 4, 20, 30, 50, 250, 0
         },
     }
     wf.mspQueue:add(message)
@@ -191,6 +205,12 @@ local function setPidProfile(data)
     wf.mspHelper.writeU8(message.payload, data.gain_curve_pitch.value)
     wf.mspHelper.writeU8(message.payload, data.gain_curve_yaw.value)
     wf.mspHelper.writeU16(message.payload, data.atthold_max_rate.value)
+    wf.mspHelper.writeU8(message.payload, data.osc_limiter.value)
+    wf.mspHelper.writeU8(message.payload, data.osc_limiter_min_hz.value)
+    wf.mspHelper.writeU8(message.payload, data.osc_limiter_max_hz.value)
+    wf.mspHelper.writeU8(message.payload, data.osc_limiter_threshold.value)
+    wf.mspHelper.writeU8(message.payload, data.osc_limiter_floor.value)
+    wf.mspHelper.writeU16(message.payload, data.osc_limiter_engage_ms.value)
     wf.mspQueue:add(message)
 end
 

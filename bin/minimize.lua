@@ -251,6 +251,12 @@ local mspPidProfileReplacements = {
     { ".gain_curve_pitch", "[40]" },
     { ".gain_curve_yaw", "[41]" },
     { ".atthold_max_rate", "[42]" },
+    { ".osc_limiter", "[43]" },
+    { ".osc_limiter_min_hz", "[44]" },
+    { ".osc_limiter_max_hz", "[45]" },
+    { ".osc_limiter_threshold", "[46]" },
+    { ".osc_limiter_floor", "[47]" },
+    { ".osc_limiter_engage_ms", "[48]" },
 }
 
 local mspEscAm32Replacements = {

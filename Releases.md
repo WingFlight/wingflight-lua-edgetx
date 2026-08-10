@@ -1,3 +1,7 @@
+# 0.0.11
+
+Version bump for release alignment; no EdgeTX Lua-relevant changes this cycle.
+
 # 0.0.10
 
 This is the first _development snapshot_ of the Wingflight Lua Scripts for EdgeTX and OpenTX.

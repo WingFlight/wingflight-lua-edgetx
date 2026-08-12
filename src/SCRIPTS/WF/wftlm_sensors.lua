@@ -292,6 +292,8 @@ local sensorsById  =  {
     [92] = { sid = 0x1204, name = "Resc", unit = UNIT_RAW, prec = 0, dec = decU8 },
     -- Governor state
     [93] = { sid = 0x1205, name = "Gov", unit = UNIT_RAW, prec = 0, dec = decU8 },
+    -- Oscillation limiter state
+    [118] = { sid = 0x1206, name = "OscL", unit = UNIT_RAW, prec = 0, dec = decU16 },
 
     -- Current PID profile
     [95] = { sid = 0x1211, name = "PID#", unit = UNIT_RAW, prec = 0, dec = decU8 },

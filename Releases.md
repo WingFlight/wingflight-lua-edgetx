@@ -1,3 +1,7 @@
+# 0.0.13
+
+Version bump for release alignment; no EdgeTX Lua-relevant changes this cycle.
+
 # 0.0.12
 
 Version bump for release alignment; no EdgeTX Lua-relevant changes this cycle.

@@ -74,7 +74,10 @@ end
 
 -- The 32-slot mixer rule table. There is no bulk "set all" or single "get one rule"
 -- command on the firmware -- rules are always fetched in bulk and written back one at a
--- time by index.
+-- time by index. `role` is a purely descriptive tag (mixerRuleRole_e, pg/mixer.h) the
+-- mixer evaluator never reads -- it lets other tooling (a Compensation table, an RC
+-- adjustment) find a rule serving a known job (e.g. flap-to-elevator compensation)
+-- regardless of which slot it lives in.
 
 local function getMixerRules(callback, callbackParam)
     local message = {
@@ -92,6 +95,7 @@ local function getMixerRules(callback, callbackParam)
                     speed = { value = wf.mspHelper.readU16(buf), min = 0, max = 60000 },
                     curve = { value = wf.mspHelper.readU8(buf), min = 0, max = MIXER_CURVE_COUNT },
                     condition = { value = wf.mspHelper.readU8(buf), min = 0, max = 16 },
+                    role = { value = wf.mspHelper.readU8(buf), min = 0, max = 2, table = { [0] = "None", "Flap Compensation", "Differential Thrust Yaw" } },
                 }
             end
             callback(callbackParam, rules)
@@ -114,6 +118,7 @@ local function setMixerRule(index, rule)
     wf.mspHelper.writeU16(message.payload, rule.speed.value)
     wf.mspHelper.writeU8(message.payload, rule.curve.value)
     wf.mspHelper.writeU8(message.payload, rule.condition.value)
+    wf.mspHelper.writeU8(message.payload, rule.role.value)
     wf.mspQueue:add(message)
 end
 

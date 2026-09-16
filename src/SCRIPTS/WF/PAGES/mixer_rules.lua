@@ -25,6 +25,7 @@ local function setValues(ruleIndex)
     fields[8].data = rules[ruleIndex].speed
     fields[9].data = rules[ruleIndex].curve
     fields[10].data = rules[ruleIndex].condition
+    fields[11].data = rules[ruleIndex].role
 end
 
 local function onChangeRule(field, page)
@@ -36,7 +37,9 @@ end
 -- `input`/`output`/`curve`/`condition` are shown numerically: `input` is the firmware's
 -- MIXER_IN_* enum (see Mixer Inputs page), `output` is 0=none then servo outputs then
 -- motor outputs (board/target specific count), `curve` is 0=none/1..8=Mixer Curves slot,
--- `condition` is 0=always/1..16=Logic Condition slot.
+-- `condition` is 0=always/1..16=Logic Condition slot. `role` has its own name table
+-- (mspMixer.lua) since it's a small fixed set (mixerRuleRole_e, pg/mixer.h) rather than
+-- a board-specific or open-ended range.
 labels[#labels + 1] = { t = "Mixer Rules", x = x, y = incY(lineSpacing) }
 fields[1] = { t = "Rule",       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = { min = 0, max = mspMixer.MIXER_RULE_COUNT - 1 }, postEdit = onChangeRule }
 fields[2] = { t = "Operation",  x = x + indent, y = incY(lineSpacing), sp = x + sp }
@@ -48,6 +51,7 @@ fields[7] = { t = "Weight neg", x = x + indent, y = incY(lineSpacing), sp = x + 
 fields[8] = { t = "Speed",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[9] = { t = "Curve",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[10] = { t = "Condition", x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[11] = { t = "Role",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 local function receivedMixerRules(page, receivedRules)
     rules = receivedRules

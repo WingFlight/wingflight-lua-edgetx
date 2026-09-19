@@ -25,6 +25,8 @@ local  function setValues(servoIndex)
     fields[6].data = servoConfigs[servoIndex].scalePos
     fields[7].data = servoConfigs[servoIndex].rate
     fields[8].data = servoConfigs[servoIndex].speed
+    -- Older FCs report no trim: show an inert 0 that cannot be edited.
+    fields[9].data = servoConfigs[servoIndex].trim or { value = 0, min = 0, max = 0 }
 end
 
 -- Field event functions
@@ -43,6 +45,10 @@ local function onPreEditCenter(field, page)
 end
 
 local function onChangeCenter(field, page)
+    updateSelectedServoConfiguration = true
+end
+
+local function onChangeTrim(field, page)
     updateSelectedServoConfiguration = true
 end
 
@@ -84,8 +90,9 @@ fields[5] = { t = "Scale neg",  x = x + indent, y = incY(lineSpacing), sp = x + 
 fields[6] = { t = "Scale pos",  x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoScalePos" }
 fields[7] = { t = "Rate",       x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoRate" }
 fields[8] = { t = "Speed",      x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoSpeed" }
+fields[9] = { t = "Trim",       x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoTrim", change = onChangeTrim }
 incY(lineSpacing * 0.5)
-fields[9] = { t = "[Override All Servos]", x = x + indent * 2, y = incY(lineSpacing), preEdit = onClickOverride }
+fields[10] = { t = "[Override All Servos]", x = x + indent * 2, y = incY(lineSpacing), preEdit = onClickOverride }
 
 local function receivedServoConfigurations(page, configs)
     servoConfigs = configs

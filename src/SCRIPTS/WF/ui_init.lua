@@ -19,7 +19,7 @@ local function init()
 
     if wf.mspQueue:isProcessed() and apiVersion then
         local apiVersionAsString = string.format("%.2f", apiVersion)
-        if apiVersion < 12.06 then
+        if apiVersion < 22.03 then
             returnTable.t = "This version of the Lua\nscripts can't be used\nwith the selected model\nwhich has version "..apiVersionAsString.."."
         else
             -- received correct API version, proceed

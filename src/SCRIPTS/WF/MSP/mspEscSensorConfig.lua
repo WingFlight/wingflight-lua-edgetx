@@ -1,35 +1,15 @@
 local function getDefaults()
     local defaults = {}
-    local protocolTable = { [0] = "NONE", "BLHELI32", "HOBBYWING V4", "HOBBYWING V5", "SCORPION", "KONTRONIK", "OMP", "ZTW", "APD", "OPENYGE" }
-
-    if wf.apiVersion >= 12.07 then
-        protocolTable[#protocolTable + 1] = "FLYROTOR"
-        protocolTable[#protocolTable + 1] = "GRAUPNER"
-    end
-    if wf.apiVersion >= 12.08 then
-        protocolTable[#protocolTable + 1] = "XDFLY"
-    end
-    if wf.apiVersion >= 12.09 then
-        protocolTable[#protocolTable + 1] = "FrSky F.BUS"
-    end
+    local protocolTable = { [0] = "NONE", "BLHELI32", "HOBBYWING V4", "HOBBYWING V5", "SCORPION", "KONTRONIK", "OMP", "ZTW", "APD", "OPENYGE", "FLYROTOR", "GRAUPNER", "XDFLY", "FrSky F.BUS" }
 
     defaults.protocol = { min = 0, max = #protocolTable, table = protocolTable }
     defaults.half_duplex = { min = 0, max = 1, table = { [0] = "Off", "On" } }
     defaults.update_hz = { min = 10, max = 500, unit = wf.units.herz }
     defaults.current_offset = { min = 0, max = 16000 }
-    if wf.apiVersion < 12.09 then
-        defaults.hw4_current_offset = { min = 0, max = 1000 }
-        defaults.hw4_current_gain = { min = 0, max = 250 }
-        defaults.hw4_voltage_gain = { min = 0, max = 250 }
-    end
-    if wf.apiVersion >= 12.07 then
-        defaults.pin_swap = { min = 0, max = 1, table = { [0] = "Off", "On" } }
-    end
-    if wf.apiVersion >= 12.08 then
-        defaults.voltage_correction = { min = -100, max = 125, unit = wf.units.percentage }
-        defaults.current_correction = { min = -100, max = 125, unit = wf.units.percentage }
-        defaults.consumption_correction = { min = -100, max = 125, unit = wf.units.percentage }
-    end
+    defaults.pin_swap = { min = 0, max = 1, table = { [0] = "Off", "On" } }
+    defaults.voltage_correction = { min = -100, max = 125, unit = wf.units.percentage }
+    defaults.current_correction = { min = -100, max = 125, unit = wf.units.percentage }
+    defaults.consumption_correction = { min = -100, max = 125, unit = wf.units.percentage }
     return defaults
 end
 
@@ -42,24 +22,13 @@ local function getEscSensorConfig(callback, callbackParam, data)
             data.half_duplex.value = wf.mspHelper.readU8(buf)
             data.update_hz.value = wf.mspHelper.readU16(buf)
             data.current_offset.value = wf.mspHelper.readU16(buf)
-            if wf.apiVersion < 12.09 then
-                data.hw4_current_offset.value = wf.mspHelper.readU16(buf)
-                data.hw4_current_gain.value = wf.mspHelper.readU8(buf)
-                data.hw4_voltage_gain.value = wf.mspHelper.readU8(buf)
-            else
-                buf.offset = buf.offset + 4
-            end
-            if wf.apiVersion >= 12.07 then
-                data.pin_swap.value = wf.mspHelper.readU8(buf)
-            end
-            if wf.apiVersion >= 12.08 then
-                data.voltage_correction.value = wf.mspHelper.readS8(buf)
-                data.current_correction.value = wf.mspHelper.readS8(buf)
-                data.consumption_correction.value = wf.mspHelper.readS8(buf)
-            end
+            data.pin_swap.value = wf.mspHelper.readU8(buf)
+            data.voltage_correction.value = wf.mspHelper.readS8(buf)
+            data.current_correction.value = wf.mspHelper.readS8(buf)
+            data.consumption_correction.value = wf.mspHelper.readS8(buf)
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 0, 0, 200, 0, 15, 0, 0, 0, 0, 30, 0, 0, 0, 0 }
+        simulatorResponse = { 0, 0, 200, 0, 15, 0, 0, 0, 0, 0 }
     }
     wf.mspQueue:add(message)
 end
@@ -74,21 +43,10 @@ local function setEscSensorConfig(config)
     wf.mspHelper.writeU8(message.payload, config.half_duplex.value)
     wf.mspHelper.writeU16(message.payload, config.update_hz.value)
     wf.mspHelper.writeU16(message.payload, config.current_offset.value)
-    if wf.apiVersion < 12.09 then
-        wf.mspHelper.writeU16(message.payload, config.hw4_current_offset.value)
-        wf.mspHelper.writeU8(message.payload, config.hw4_current_gain.value)
-        wf.mspHelper.writeU8(message.payload, config.hw4_voltage_gain.value)
-    else
-        wf.mspHelper.writeU32(message.payload, 0)
-    end
-    if wf.apiVersion >= 12.07 then
-        wf.mspHelper.writeU8(message.payload, config.pin_swap.value)
-    end
-    if wf.apiVersion >= 12.08 then
-        wf.mspHelper.writeU8(message.payload, config.voltage_correction.value)
-        wf.mspHelper.writeU8(message.payload, config.current_correction.value)
-        wf.mspHelper.writeU8(message.payload, config.consumption_correction.value)
-    end
+    wf.mspHelper.writeU8(message.payload, config.pin_swap.value)
+    wf.mspHelper.writeU8(message.payload, config.voltage_correction.value)
+    wf.mspHelper.writeU8(message.payload, config.current_correction.value)
+    wf.mspHelper.writeU8(message.payload, config.consumption_correction.value)
     wf.mspQueue:add(message)
 end
 

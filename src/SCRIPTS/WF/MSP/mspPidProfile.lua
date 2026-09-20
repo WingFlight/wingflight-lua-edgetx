@@ -1,18 +1,9 @@
--- Several fields that used to be real heli-only settings are now wire-present-but-dead
--- placeholder bytes on this firmware (it always writes 0 -- or 1 for error_rotation -- and
--- discards whatever is written back); they are skip-read/written-as-filler here rather than
--- exposed as data, so downstream PAGES files must not reference them. A number of new
--- fixed-wing-only fields (fw_tpa_*, master_gain, autohover, cross_axis_relax, gain_curve,
--- atthold.max_rate) are appended at the end of the packet and are read/written here in full.
 
 local function getDefaults()
     local data = {}
     data.pid_mode = { min = 0, max = 250 }
     data.iterm_decay_time = { min = 0, max = 250, scale = 10, unit = wf.units.seconds }
     data.iterm_decay_limit = { min = 0, max = 250, unit = wf.units.degreesPerSecond }
-    if wf.apiVersion < 12.09 then
-        data.error_rotation = { min = 0, max = 1, table = { [0] = "OFF", "ON" } }
-    end
     data.error_limit_roll = { min = 0, max = 180, unit = wf.units.degrees }
     data.error_limit_pitch = { min = 0, max = 180, unit = wf.units.degrees }
     data.error_limit_yaw = { min = 0, max = 180, unit = wf.units.degrees }
@@ -61,16 +52,8 @@ local function getPidProfile(callback, callbackParam, data)
         command = 94, -- MSP_PID_PROFILE
         processReply = function(self, buf)
             data.pid_mode.value = wf.mspHelper.readU8(buf)
-            wf.mspHelper.readU8(buf) -- was error_decay_time_ground (dead)
             data.iterm_decay_time.value = wf.mspHelper.readU8(buf)
-            wf.mspHelper.readU8(buf) -- was error_decay_time_yaw (dead)
             data.iterm_decay_limit.value = wf.mspHelper.readU8(buf)
-            wf.mspHelper.readU8(buf) -- was error_decay_limit_yaw (dead)
-            if wf.apiVersion < 12.09 then
-                data.error_rotation.value = wf.mspHelper.readU8(buf)
-            else
-                wf.mspHelper.readU8(buf) -- was error_rotation (dead, firmware always sends 1)
-            end
             data.error_limit_roll.value = wf.mspHelper.readU8(buf)
             data.error_limit_pitch.value = wf.mspHelper.readU8(buf)
             data.error_limit_yaw.value = wf.mspHelper.readU8(buf)
@@ -84,23 +67,16 @@ local function getPidProfile(callback, callbackParam, data)
             data.iterm_relax_cutoff_roll.value = wf.mspHelper.readU8(buf)
             data.iterm_relax_cutoff_pitch.value = wf.mspHelper.readU8(buf)
             data.iterm_relax_cutoff_yaw.value = wf.mspHelper.readU8(buf)
-            for _ = 1, 5 do wf.mspHelper.readU8(buf) end -- was yaw_cw_stop_gain, yaw_ccw_stop_gain, yaw_precomp_cutoff, yaw_cyclic_ff_gain, yaw_collective_ff_gain (dead)
-            wf.mspHelper.readU8(buf) -- was yaw_collective_dynamic_gain (dead)
-            wf.mspHelper.readU8(buf) -- was yaw_collective_dynamic_decay (dead)
-            wf.mspHelper.readU8(buf) -- was pitch_collective_ff_gain (dead)
             data.angle_level_strength.value = wf.mspHelper.readU8(buf)
             data.angle_level_limit.value = wf.mspHelper.readU8(buf)
             data.horizon_level_strength.value = wf.mspHelper.readU8(buf)
             data.trainer_gain.value = wf.mspHelper.readU8(buf)
             data.trainer_angle_limit.value = wf.mspHelper.readU8(buf)
-            for _ = 1, 3 do wf.mspHelper.readU8(buf) end -- was cyclic_cross_coupling_gain/ratio/cutoff (dead)
             data.atthold_gain.value = wf.mspHelper.readU8(buf)
             data.atthold_deadband.value = wf.mspHelper.readU8(buf)
             data.bterm_cutoff_roll.value = wf.mspHelper.readU8(buf)
             data.bterm_cutoff_pitch.value = wf.mspHelper.readU8(buf)
             data.bterm_cutoff_yaw.value = wf.mspHelper.readU8(buf)
-            wf.mspHelper.readU8(buf) -- was yaw_inertia_precomp_gain (dead)
-            wf.mspHelper.readU8(buf) -- was yaw_inertia_precomp_cutoff (dead)
             data.fw_tpa_gain.value = wf.mspHelper.readU8(buf)
             data.fw_tpa_curve.value = wf.mspHelper.readU8(buf)
             data.master_gain_roll.value = wf.mspHelper.readU16(buf)
@@ -120,9 +96,18 @@ local function getPidProfile(callback, callbackParam, data)
             callback(callbackParam, data)
         end,
         simulatorResponse = {
-            3, 0, 25, 0, 250, 0, 1, 12, 0, 1, 30, 30, 45, 50, 50, 100, 15, 15, 20, 0, 0, 0, 0, 0, 0, 0, 0,
-            2, 10, 10, 15, 100, 100, 0, 0, 0, 20, 25, 40, 55, 40, 0, 0,
-            100, 0, 100, 0, 100, 0, 100, 0, 50, 30, 44, 1, 0, 30, 100, 10, 0, 0, 0, 0, 44, 1
+            3, 25, 250,
+            30, 30, 45, 50, 50, 100, 15, 15, 20,
+            2, 10, 10, 15,
+            50, 55, 40, 80, 40,
+            50, 10,
+            20, 25, 40,
+            100, 0,
+            100, 0, 100, 0, 100, 0,
+            50, 30, 44, 1,
+            0, 100, 10, 0,
+            0, 0, 0,
+            44, 1
         },
     }
     wf.mspQueue:add(message)
@@ -135,16 +120,8 @@ local function setPidProfile(data)
         simulatorResponse = {}
     }
     wf.mspHelper.writeU8(message.payload, data.pid_mode.value)
-    wf.mspHelper.writeU8(message.payload, 0) -- was error_decay_time_ground (dead)
     wf.mspHelper.writeU8(message.payload, data.iterm_decay_time.value)
-    wf.mspHelper.writeU8(message.payload, 0) -- was error_decay_time_yaw (dead)
     wf.mspHelper.writeU8(message.payload, data.iterm_decay_limit.value)
-    wf.mspHelper.writeU8(message.payload, 0) -- was error_decay_limit_yaw (dead)
-    if wf.apiVersion < 12.09 then
-        wf.mspHelper.writeU8(message.payload, data.error_rotation.value)
-    else
-        wf.mspHelper.writeU8(message.payload, 0) -- was error_rotation (dead)
-    end
     wf.mspHelper.writeU8(message.payload, data.error_limit_roll.value)
     wf.mspHelper.writeU8(message.payload, data.error_limit_pitch.value)
     wf.mspHelper.writeU8(message.payload, data.error_limit_yaw.value)
@@ -158,23 +135,16 @@ local function setPidProfile(data)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_roll.value)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_pitch.value)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_yaw.value)
-    for _ = 1, 5 do wf.mspHelper.writeU8(message.payload, 0) end -- was yaw_cw/ccw_stop_gain, yaw_precomp_cutoff, yaw_cyclic_ff_gain, yaw_collective_ff_gain (dead)
-    wf.mspHelper.writeU8(message.payload, 0) -- was yaw_collective_dynamic_gain (dead)
-    wf.mspHelper.writeU8(message.payload, 0) -- was yaw_collective_dynamic_decay (dead)
-    wf.mspHelper.writeU8(message.payload, 0) -- was pitch_collective_ff_gain (dead)
     wf.mspHelper.writeU8(message.payload, data.angle_level_strength.value)
     wf.mspHelper.writeU8(message.payload, data.angle_level_limit.value)
     wf.mspHelper.writeU8(message.payload, data.horizon_level_strength.value)
     wf.mspHelper.writeU8(message.payload, data.trainer_gain.value)
     wf.mspHelper.writeU8(message.payload, data.trainer_angle_limit.value)
-    for _ = 1, 3 do wf.mspHelper.writeU8(message.payload, 0) end -- was cyclic_cross_coupling_gain/ratio/cutoff (dead)
     wf.mspHelper.writeU8(message.payload, data.atthold_gain.value)
     wf.mspHelper.writeU8(message.payload, data.atthold_deadband.value)
     wf.mspHelper.writeU8(message.payload, data.bterm_cutoff_roll.value)
     wf.mspHelper.writeU8(message.payload, data.bterm_cutoff_pitch.value)
     wf.mspHelper.writeU8(message.payload, data.bterm_cutoff_yaw.value)
-    wf.mspHelper.writeU8(message.payload, 0) -- was yaw_inertia_precomp_gain (dead)
-    wf.mspHelper.writeU8(message.payload, 0) -- was yaw_inertia_precomp_cutoff (dead)
     wf.mspHelper.writeU8(message.payload, data.fw_tpa_gain.value)
     wf.mspHelper.writeU8(message.payload, data.fw_tpa_curve.value)
     wf.mspHelper.writeU16(message.payload, data.master_gain_roll.value)

@@ -15,8 +15,6 @@ local function getDefaults()
     defaults.roll_b = { min = 0, max = 1000 }
     defaults.pitch_b = { min = 0, max = 1000 }
     defaults.yaw_b = { min = 0, max = 1000 }
-    defaults.roll_o = { min = 0, max = 1000 }
-    defaults.pitch_o = { min = 0, max = 1000 }
     return defaults
 end
 
@@ -40,11 +38,9 @@ local function getPidTuning(callback, callbackParam, data)
             data.roll_b.value = wf.mspHelper.readU16(buf)
             data.pitch_b.value = wf.mspHelper.readU16(buf)
             data.yaw_b.value = wf.mspHelper.readU16(buf)
-            data.roll_o.value = wf.mspHelper.readU16(buf)
-            data.pitch_o.value = wf.mspHelper.readU16(buf)
             callback(callbackParam, data)
         end,
-        simulatorResponse = {70, 0, 225, 0, 90, 0, 120, 0, 100, 0, 200, 0, 70, 0, 120, 0, 100, 0, 125, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 25, 0 },
+        simulatorResponse = {70, 0, 225, 0, 90, 0, 120, 0, 100, 0, 200, 0, 70, 0, 120, 0, 100, 0, 125, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     }
     wf.mspQueue:add(message)
 end
@@ -70,8 +66,6 @@ local function setPidTuning(data)
     wf.mspHelper.writeU16(message.payload, data.roll_b.value)
     wf.mspHelper.writeU16(message.payload, data.pitch_b.value)
     wf.mspHelper.writeU16(message.payload, data.yaw_b.value)
-    wf.mspHelper.writeU16(message.payload, data.roll_o.value)
-    wf.mspHelper.writeU16(message.payload, data.pitch_o.value)
     wf.mspQueue:add(message)
 end
 

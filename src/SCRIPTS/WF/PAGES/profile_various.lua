@@ -17,45 +17,73 @@ collectgarbage()
 
 fields[#fields + 1] = { t = "Current PID profile",     x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
 
-incY(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Acro Trainer",            x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.trainer_gain,                   id = "profilesAcroTrainerGain" }
-fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.trainer_angle_limit,            id = "profilesAcroTrainerLimit" }
-labels[#labels + 1] = { t = "Angle Mode",              x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_strength,           id = "profilesAngleModeGain" }
-fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_limit,              id = "profilesAngleModeLimit" }
-labels[#labels + 1] = { t = "Horizon Mode",            x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.horizon_level_strength,         id = "profilesHorizonModeGain" }
+-- Build once after the reply so old firmware only shows supported fields.
+local function buildProfileFields()
+    for i = #fields, 2, -1 do fields[i] = nil end
+    for i = #labels, 1, -1 do labels[i] = nil end
+    y = fields[1].y
+    incY(lineSpacing * 0.25)
+    labels[#labels + 1] = { t = "Trainer",            x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.trainer_gain,                   id = "profilesAcroTrainerGain" }
+    if pidProfile.has_axis_limits then
+        fields[#fields + 1] = { t = "Bank limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.trainer_roll_limit }
+        fields[#fields + 1] = { t = "Pitch limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.trainer_pitch_limit }
+    else
+        fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.trainer_angle_limit,            id = "profilesAcroTrainerLimit" }
+    end
+    labels[#labels + 1] = { t = "Angle Mode",              x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_strength,           id = "profilesAngleModeGain" }
+    if pidProfile.has_axis_limits then
+        fields[#fields + 1] = { t = "Bank limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_roll_limit }
+        fields[#fields + 1] = { t = "Pitch limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_pitch_limit }
+    else
+        fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_limit,              id = "profilesAngleModeLimit" }
+    end
+    labels[#labels + 1] = { t = "Horizon Mode",            x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.horizon_level_strength,         id = "profilesHorizonModeGain" }
 
-incY(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Fixed-Wing TPA",          x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_tpa_gain }
-fields[#fields + 1] = { t = "Curve",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_tpa_curve }
+    incY(lineSpacing * 0.25)
+    labels[#labels + 1] = { t = "Fixed-Wing TPA",          x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_tpa_gain }
+    fields[#fields + 1] = { t = "Curve",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_tpa_curve }
 
-incY(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Master Gains",            x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_roll }
-fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_pitch }
-fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_yaw }
-labels[#labels + 1] = { t = "Gain Curve",              x = x + indent, y = incY(lineSpacing), bold = false }
-fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_roll }
-fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_pitch }
-fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_yaw }
+    incY(lineSpacing * 0.25)
+    labels[#labels + 1] = { t = "Master Gains",            x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_roll }
+    fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_pitch }
+    fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_yaw }
+    labels[#labels + 1] = { t = "Gain Curve",              x = x + indent, y = incY(lineSpacing), bold = false }
+    fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_roll }
+    fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_pitch }
+    fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_yaw }
 
-incY(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Auto Hover",              x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_gain }
-fields[#fields + 1] = { t = "Max angle",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_max_angle }
-fields[#fields + 1] = { t = "Max rate",                 x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_max_rate }
+    incY(lineSpacing * 0.25)
+    labels[#labels + 1] = { t = "Auto Hover",              x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_gain }
+    fields[#fields + 1] = { t = "Max angle",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_max_angle }
+    fields[#fields + 1] = { t = "Max rate",                 x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_max_rate }
 
-incY(lineSpacing * 0.25)
-labels[#labels + 1] = { t = "Cross-Axis Relax",        x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Roll strength",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_strength }
-fields[#fields + 1] = { t = "Pitch strength",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_pitch_strength }
-fields[#fields + 1] = { t = "Level",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_level }
-fields[#fields + 1] = { t = "Cutoff",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_cutoff }
+    if pidProfile.has_roll_deadband then
+        fields[#fields + 1] = { t = "Roll deadband", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_roll_deadband }
+    end
+    if pidProfile.has_throttle_assist then
+        labels[#labels + 1] = { t = "Throttle Assist", x = x, y = incY(lineSpacing) }
+        fields[#fields + 1] = { t = "Gain", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_throttle_assist_gain }
+        fields[#fields + 1] = { t = "Ceiling", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_throttle_assist_max }
+        fields[#fields + 1] = { t = "Trigger time", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_throttle_assist_trigger_ms }
+    end
+
+    incY(lineSpacing * 0.25)
+    labels[#labels + 1] = { t = "Cross-Axis Relax",        x = x,          y = incY(lineSpacing) }
+    fields[#fields + 1] = { t = "Roll strength",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_strength }
+    fields[#fields + 1] = { t = "Pitch strength",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_pitch_strength }
+    fields[#fields + 1] = { t = "Level",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_level }
+    fields[#fields + 1] = { t = "Cutoff",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_cutoff }
+
+end
 
 local function receivedPidProfile(page, _)
+    buildProfileFields()
     wf.onPageReady(page)
 end
 

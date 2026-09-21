@@ -1,3 +1,7 @@
+# 0.0.25
+
+Rebase onto the Wingflight 22.x MSP API and drop the heli placeholder bytes.
+
 # 0.0.24
 
 Version bump for release alignment; no EdgeTX Lua-relevant changes this cycle.

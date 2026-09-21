@@ -7,7 +7,7 @@ local function getApiVersion(callback, callbackParam)
                 callback(callbackParam, version)
             end
         end,
-        simulatorResponse = { 0, 22, 3 }
+        simulatorResponse = { 0, 22, 4 }
     }
     wf.mspQueue:add(message)
 end

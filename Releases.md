@@ -1,4 +1,4 @@
-# Unreleased
+# 0.0.26
 
 Align PID-profile MSP reads/writes with API 22.4: include Auto Hover roll deadband, throttle assist and independent Trainer/Angle bank and pitch limits. Profile - Various shows fields supported by the received payload; older 22.03 firmware keeps shared angle limits. Preserve inherited limits when saving unrelated settings and update the simulator to API 22.4.
 

@@ -1,3 +1,9 @@
+# 0.0.27
+
+Require MSP API 22.4 and show the required version when connected to other firmware. Replace the old Rotorflight 12.x version checks with 22.4 for the battery, model, SmartFuel and filter settings.
+Read and write the per-profile battery cell count and cell voltages, so saving the Battery page keeps every profile's cell settings.
+Fix the Mixer Inputs page missing the three thrust-vector inputs (27-29), and add the SRXL2 and RECORD ESC telemetry protocols.
+
 # 0.0.26
 
 Align PID-profile MSP reads/writes with API 22.4: include Auto Hover roll deadband, throttle assist and independent Trainer/Angle bank and pitch limits. Profile - Various shows fields supported by the received payload; older 22.03 firmware keeps shared angle limits. Preserve inherited limits when saving unrelated settings and update the simulator to API 22.4.

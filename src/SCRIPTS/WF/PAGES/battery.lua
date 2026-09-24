@@ -11,10 +11,10 @@ local function incY(val) y = y + val return y end
 local labels = {}
 local fields = {}
 local batteryConfig = wf.useApi("mspBatteryConfig").getDefaults()
-local batSwitcher = nil  -- only initialized when MSP API >= 12.09
+local batSwitcher = nil  -- only initialized when MSP API >= 22.04
 
 labels[#labels + 1] = { t = "Battery",                  x = x,          y = incY(lineSpacing) }
-if wf.apiVersion < 12.09 then
+if wf.apiVersion < 22.04 then
     fields[#fields + 1] = { t = "Capacity",             x = x, w = 100, y = incY(lineSpacing), sp = x + sp, data = batteryConfig.batteryCapacity }
 else
     batSwitcher = wf.executeScript("PAGES/helpers/batSwitcher.lua")
@@ -53,19 +53,22 @@ end
 
 return {
     read = function(self)
-        if wf.apiVersion >= 12.09 then
+        if wf.apiVersion >= 22.04 then
             self.batSwitcher.getStatus(self, fields[1])
         end
         wf.useApi("mspBatteryConfig").read(receivedBatteryConfig, self, batteryConfig)
     end,
     write = function(self)
         if batteryConfig.voltageMeterSource.value then
+            if wf.apiVersion >= 22.04 then
+                batteryConfig.activeBatteryProfile = fields[1].data.value
+            end
             wf.useApi("mspBatteryConfig").write(batteryConfig)
             wf.settingsSaved(true, false)
         end
     end,
     timer = function(self)
-        if wf.apiVersion >= 12.09 then
+        if wf.apiVersion >= 22.04 then
             self.batSwitcher.checkStatus(self)
         end
     end,

@@ -17,7 +17,7 @@ local function getDefaults()
     defaults.dyn_notch_q = { min = 10, max = 100, scale = 10 }
     defaults.dyn_notch_min_hz = { min = 10, max = 200, unit = wf.units.herz }
     defaults.dyn_notch_max_hz = { min = 100, max = 500, unit = wf.units.herz }
-    if wf.apiVersion >= 12.08 then
+    if wf.apiVersion >= 22.04 then
         defaults.preset = { min = 0, max = 3 }
         defaults.min_hz = { min = 1, max = 100, unit = wf.units.herz }
     end
@@ -44,7 +44,7 @@ local function getFilterConfig(callback, callbackParam, data)
             data.dyn_notch_q.value = wf.mspHelper.readU8(buf)
             data.dyn_notch_min_hz.value = wf.mspHelper.readU16(buf)
             data.dyn_notch_max_hz.value = wf.mspHelper.readU16(buf)
-            if wf.apiVersion >= 12.08 then
+            if wf.apiVersion >= 22.04 then
                 data.preset.value = wf.mspHelper.readU8(buf)
                 data.min_hz.value = wf.mspHelper.readU8(buf)
             end
@@ -76,7 +76,7 @@ local function setFilterConfig(data)
     wf.mspHelper.writeU8(message.payload, data.dyn_notch_q.value)
     wf.mspHelper.writeU16(message.payload, data.dyn_notch_min_hz.value)
     wf.mspHelper.writeU16(message.payload, data.dyn_notch_max_hz.value)
-    if wf.apiVersion >= 12.08 then
+    if wf.apiVersion >= 22.04 then
         wf.mspHelper.writeU8(message.payload, data.preset.value)
         wf.mspHelper.writeU8(message.payload, data.min_hz.value)
     end

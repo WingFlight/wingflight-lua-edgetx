@@ -1,6 +1,6 @@
 local function getDefaults()
     local defaults = {}
-    if wf.apiVersion < 12.09 then
+    if wf.apiVersion < 22.04 then
         defaults.batteryCapacity = { min = 0, max = 20000, mult = 25, unit = wf.units.mah }
     end
     defaults.batteryCellCount = { min = 0, max = 24 }
@@ -12,8 +12,13 @@ local function getDefaults()
     defaults.vbatwarningcellvoltage = { min = 100, max = 500, scale = 100, unit =  wf.units.volt }
     defaults.lvcPercentage = { min = 0, max = 100, unit = wf.units.percentage }
     defaults.consumptionWarningPercentage = { min = 0, max = 100, unit = wf.units.percentage }
-    if wf.apiVersion >= 12.09 then
+    if wf.apiVersion >= 22.04 then
         defaults.batteryCapacity = { }
+        defaults.profileCellCount = {}
+        defaults.profileMinCellVoltage = {}
+        defaults.profileMaxCellVoltage = {}
+        defaults.profileFullCellVoltage = {}
+        defaults.profileWarningCellVoltage = {}
         for i = 0, 5 do
             defaults.batteryCapacity[i] = { min = 0, max = 20000, mult = 25, units = wf.units.mah }
         end
@@ -28,7 +33,7 @@ local function getBatteryConfig(callback, callbackParam, config)
         command = 32, -- MSP_BATTERY_CONFIG
         processReply = function(self, buf)
             local activeBatteryCapacity =  wf.mspHelper.readU16(buf)
-            if wf.apiVersion < 12.09 then
+            if wf.apiVersion < 22.04 then
                 config.batteryCapacity.value = activeBatteryCapacity
             end
             config.batteryCellCount.value = wf.mspHelper.readU8(buf)
@@ -40,14 +45,39 @@ local function getBatteryConfig(callback, callbackParam, config)
             config.vbatwarningcellvoltage.value = wf.mspHelper.readU16(buf)
             config.lvcPercentage.value = wf.mspHelper.readU8(buf)
             config.consumptionWarningPercentage.value = wf.mspHelper.readU8(buf)
-            if wf.apiVersion >= 12.09 then
+            if wf.apiVersion >= 22.04 then
                 for i = 0, 5 do
                     config.batteryCapacity[i].value = wf.mspHelper.readU16(buf)
+                end
+                if #buf >= 81 then
+                    for i = 0, 5 do
+                        config.profileCellCount[i] = wf.mspHelper.readU8(buf)
+                    end
+                    for i = 0, 5 do
+                        config.profileMinCellVoltage[i] = wf.mspHelper.readU16(buf)
+                    end
+                    for i = 0, 5 do
+                        config.profileMaxCellVoltage[i] = wf.mspHelper.readU16(buf)
+                    end
+                    for i = 0, 5 do
+                        config.profileFullCellVoltage[i] = wf.mspHelper.readU16(buf)
+                    end
+                    for i = 0, 5 do
+                        config.profileWarningCellVoltage[i] = wf.mspHelper.readU16(buf)
+                    end
                 end
             end
             if callback then callback(callbackParam, config) end
         end,
-        simulatorResponse = { 184, 11, 12, 2, 2, 64, 1, 174, 1, 154, 1, 94, 1, 100, 10, 152, 8, 184, 11, 172, 13, 160, 15, 0, 0, 0, 0 }
+        simulatorResponse = {
+            184, 11, 12, 2, 2, 64, 1, 174, 1, 154, 1, 94, 1, 100, 10,
+            152, 8, 184, 11, 172, 13, 160, 15,
+            12, 12, 12, 12, 12, 12,
+            64, 1, 64, 1, 64, 1, 64, 1, 64, 1, 64, 1,
+            174, 1, 174, 1, 174, 1, 174, 1, 174, 1, 174, 1,
+            154, 1, 154, 1, 154, 1, 154, 1, 154, 1, 154, 1,
+            94, 1, 94, 1, 94, 1, 94, 1, 94, 1, 94, 1
+        }
     }
     wf.mspQueue:add(message)
 end
@@ -58,7 +88,7 @@ local function setBatteryConfig(config)
         payload = {},
         simulatorResponse = {}
     }
-    if wf.apiVersion < 12.09 then
+    if wf.apiVersion < 22.04 then
         wf.mspHelper.writeU16(message.payload, config.batteryCapacity.value)
     else
         wf.mspHelper.writeU16(message.payload, config.batteryCapacity[0].value) -- will be overwritten later
@@ -72,9 +102,32 @@ local function setBatteryConfig(config)
     wf.mspHelper.writeU16(message.payload, config.vbatwarningcellvoltage .value)
     wf.mspHelper.writeU8(message.payload, config.lvcPercentage .value)
     wf.mspHelper.writeU8(message.payload, config.consumptionWarningPercentage .value)
-    if wf.apiVersion >= 12.09 then
+    if wf.apiVersion >= 22.04 then
+        local profile = config.activeBatteryProfile
+        if profile then
+            config.profileCellCount[profile] = config.batteryCellCount.value
+            config.profileMinCellVoltage[profile] = config.vbatmincellvoltage.value
+            config.profileMaxCellVoltage[profile] = config.vbatmaxcellvoltage.value
+            config.profileFullCellVoltage[profile] = config.vbatfullcellvoltage.value
+            config.profileWarningCellVoltage[profile] = config.vbatwarningcellvoltage.value
+        end
         for i = 0, 5 do
             wf.mspHelper.writeU16(message.payload, config.batteryCapacity[i].value)
+        end
+        for i = 0, 5 do
+            wf.mspHelper.writeU8(message.payload, config.profileCellCount[i] or config.batteryCellCount.value)
+        end
+        for i = 0, 5 do
+            wf.mspHelper.writeU16(message.payload, config.profileMinCellVoltage[i] or config.vbatmincellvoltage.value)
+        end
+        for i = 0, 5 do
+            wf.mspHelper.writeU16(message.payload, config.profileMaxCellVoltage[i] or config.vbatmaxcellvoltage.value)
+        end
+        for i = 0, 5 do
+            wf.mspHelper.writeU16(message.payload, config.profileFullCellVoltage[i] or config.vbatfullcellvoltage.value)
+        end
+        for i = 0, 5 do
+            wf.mspHelper.writeU16(message.payload, config.profileWarningCellVoltage[i] or config.vbatwarningcellvoltage.value)
         end
     end
 

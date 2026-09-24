@@ -7,7 +7,7 @@ end
 local function getBatteryProfile(callback, callbackParam, config)
     if not config then config = getDefaults() end
     local message = {
-        command = 175, -- MSP_BATTERY_PROFILE, introduced in MSP API 12.9
+        command = 175, -- MSP_BATTERY_PROFILE
         processReply = function(self, buf)
             config.batteryProfile.value = wf.mspHelper.readU8(buf)
             if callback then callback(callbackParam, config) end
@@ -19,7 +19,7 @@ end
 
 local function setBatteryProfile(config)
     local message = {
-        command = 176, -- MSP_SET_BATTERY_PROFILE, introduced in MSP API 12.9
+        command = 176, -- MSP_SET_BATTERY_PROFILE
         payload = {},
         simulatorResponse = {}
     }

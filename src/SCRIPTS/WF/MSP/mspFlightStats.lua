@@ -12,7 +12,7 @@ end
 local function getFlightStats(callback, callbackParam, config)
     if not config then config = getDefaults() end
     local message = {
-        command = 14, -- MSP_FLIGHT_STATS, introduced in MSP API 12.9
+        command = 14, -- MSP_FLIGHT_STATS
         processReply = function(self, buf)
             config.stats_total_flights.value = wf.mspHelper.readU32(buf)
             config.stats_total_time_s.value = wf.mspHelper.readU32(buf)
@@ -29,7 +29,7 @@ end
 
 local function setFlightStats(config)
     local message = {
-        command = 15, -- MSP_SET_FLIGHT_STATS, introduced in MSP API 12.9
+        command = 15, -- MSP_SET_FLIGHT_STATS
         payload = {},
         simulatorResponse = {}
     }

@@ -1,4 +1,5 @@
 local initializationDone = false
+local apiVersionSupported = false
 local crsfCustomTelemetryEnabled = false
 local crsfCustomTelemetrySensors = nil
 
@@ -75,9 +76,8 @@ local function resetModelName()
 end
 
 local function onPilotConfigReceived(_, config)
-    if wf.apiVersion >= 12.09 then
-        -- RF 2.0 to 2.2 (MSP API 12.06 to 12.08) used settings.autoSetName (a global radio setting) to set the model name.
-        -- RF 2.3+ (MSP API 12.09+) uses a setting on the model to set the model name.
+    if wf.apiVersion >= 22.04 then
+        -- Wingflight 22.x uses a setting on the model to set the model name.
         local getBit = wf.executeScript("F/getBit")
         autoSetName = getBit(config.model_flags.value, config.model_flags.MODEL_SET_NAME) == 1 or false
         --wf.print("MODEL_SET_NAME: " .. tostring(autoSetName))
@@ -127,13 +127,18 @@ local queueInitialized = false
 local function initializeQueue()
     --wf.print("Initializing MSP queue")
 
-    wf.useApi("mspApiVersion").getApiVersion(
-        function(_, version)
+    local mspApiVersion = wf.useApi("mspApiVersion")
+    mspApiVersion.getApiVersion(
+        function(_, version, major, minor)
             wf.apiVersion = version
+            apiVersionSupported = mspApiVersion.isSupported(major, minor)
+            if not apiVersionSupported then
+                return
+            end
 
             wf.useApi("mspName").getModelName(function(_, name) wf.modelName = name end)
 
-            if wf.apiVersion >= 12.07 then
+            if wf.apiVersion >= 22.04 then
                 if not pilotConfigHasBeenSet() then
                     wf.useApi("mspPilotConfig").read(onPilotConfigReceived)
                 end
@@ -196,6 +201,7 @@ local function run(modelIsConnected)
     return
     {
         isInitialized = initialize(modelIsConnected),
+        apiVersionSupported = apiVersionSupported,
         crsfCustomTelemetryEnabled = crsfCustomTelemetryEnabled,
         crsfCustomTelemetrySensors = crsfCustomTelemetrySensors
     }
@@ -204,6 +210,7 @@ end
 local function reset()
     wf.mspQueue:clear()
     wf.apiVersion = nil
+    apiVersionSupported = false
 end
 
 return { run = run, reset = reset, useAdjustmentTeller = useAdjustmentTeller }

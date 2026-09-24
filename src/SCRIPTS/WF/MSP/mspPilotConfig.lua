@@ -8,7 +8,7 @@ local function getDefaults()
     defaults.model_param2_value = { min = -32000, max = 32000 }
     defaults.model_param3_type = { min = 0, max = #paramTypes, table = paramTypes }
     defaults.model_param3_value = { min = -32000, max = 32000 }
-    if wf.apiVersion >= 12.09 then
+    if wf.apiVersion >= 22.04 then
         defaults.model_flags = { MODEL_SET_NAME = 0, MODEL_TELL_CAPACITY = 1 } -- see pg/pilot.h
     end
     return defaults
@@ -17,7 +17,7 @@ end
 local function getPilotConfig(callback, callbackParam, config)
     if not config then config = getDefaults() end
     local message = {
-        command = 12, -- MSP_PILOT_CONFIG, introduced in MSP API 12.7
+        command = 12, -- MSP_PILOT_CONFIG
         processReply = function(self, buf)
             config.model_id.value = wf.mspHelper.readU8(buf)
             config.model_param1_type.value = wf.mspHelper.readU8(buf)
@@ -26,7 +26,7 @@ local function getPilotConfig(callback, callbackParam, config)
             config.model_param2_value.value = wf.mspHelper.readS16(buf)
             config.model_param3_type.value = wf.mspHelper.readU8(buf)
             config.model_param3_value.value = wf.mspHelper.readS16(buf)
-            if wf.apiVersion >= 12.09 then
+            if wf.apiVersion >= 22.04 then
                 config.model_flags.value = wf.mspHelper.readU32(buf)
                 --wf.print("model_flags: " .. tostring(config.model_flags.value))
             end
@@ -39,7 +39,7 @@ end
 
 local function setPilotConfig(config)
     local message = {
-        command = 13, -- MSP_SET_PILOT_CONFIG, introduced in MSP API 12.7
+        command = 13, -- MSP_SET_PILOT_CONFIG
         payload = {},
         simulatorResponse = {}
     }
@@ -50,7 +50,7 @@ local function setPilotConfig(config)
     wf.mspHelper.writeU16(message.payload, config.model_param2_value.value)
     wf.mspHelper.writeU8(message.payload, config.model_param3_type.value)
     wf.mspHelper.writeU16(message.payload, config.model_param3_value.value)
-    if wf.apiVersion >= 12.09 then
+    if wf.apiVersion >= 22.04 then
         --wf.print("model_flags: " .. tostring(config.model_flags.value))
         wf.mspHelper.writeU32(message.payload, config.model_flags.value)
     end

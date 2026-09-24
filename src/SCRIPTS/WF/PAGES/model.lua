@@ -29,7 +29,7 @@ local function buildForm(page)
     labels[#labels + 1] = { t = modelName,      x = x, y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Model ID",     x = x, y = incY(lineSpacing), sp = x + sp, data = pilotConfig.model_id }
 
-    if wf.apiVersion >= 12.09 then
+    if wf.apiVersion >= 22.04 then
         incY(lineSpacing * 0.5)
         labels[#labels + 1] = { t = "Statistics",         x = x, y = incY(lineSpacing) }
         fields[#fields + 1] = { t = "Enabled",            x = x, y = incY(lineSpacing), sp = x + sp, data = flighStats.statsEnabled,
@@ -70,7 +70,7 @@ local function buildForm(page)
     end
 
     local function getAutoSetName()
-        if wf.apiVersion >= 12.07 and wf.apiVersion < 12.09 then
+        if wf.apiVersion < 22.04 then
             return settings.autoSetName or 0
         end
         local getBit = wf.executeScript("F/getBit")
@@ -109,7 +109,7 @@ end
 
 local function setAutoSetName()
     local autoSetName = fields[setNameOnTxFieldIndex].data.value
-    if wf.apiVersion >= 12.07 and wf.apiVersion < 12.09 then
+    if wf.apiVersion < 22.04 then
         settings.autoSetName = autoSetName
         wf.saveSettings(settings)
         return
@@ -122,14 +122,14 @@ end
 return {
     read = function(self)
         wf.useApi("mspName").getModelName(onReceivedModelName, self)
-        if wf.apiVersion >= 12.09 then
+        if wf.apiVersion >= 22.04 then
             wf.useApi("mspFlightStats").read(nil, nil, flighStats)
         end
         wf.useApi("mspPilotConfig").read(onReceivedPilotConfig, self, pilotConfig)
     end,
     write = function(self)
         setAutoSetName()
-        if wf.apiVersion >= 12.09 then
+        if wf.apiVersion >= 22.04 then
             wf.useApi("mspFlightStats").write(flighStats)
         end
         wf.useApi("mspPilotConfig").write(pilotConfig)

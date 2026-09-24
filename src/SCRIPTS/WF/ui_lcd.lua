@@ -80,7 +80,7 @@ wf.settingsSaved = function(eepromWrite, reboot)
                     end
                 end,
                 errorHandler = function(self)
-                    if wf.apiVersion >= 12.08 then
+                    if wf.apiVersion >= 22.04 then
                         if not wf.saveWarningShown then
                             createMessageBox("Save warning", "Settings will be saved\nafter disarming.")
                             wf.saveWarningShown = true

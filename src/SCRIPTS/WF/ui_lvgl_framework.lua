@@ -116,7 +116,7 @@ ui.saveSettingsToEeprom = function(eepromWrite, reboot)
         errorHandler = function(self)
             if not ui.saveWarningShown then
                 ui.saveWarningShown = true
-                if wf.apiVersion >= 12.08 then
+                if wf.apiVersion >= 22.04 then
                     wf.executeScript("LVGL/messageBox").show("Save warning", "Settings will be saved\nafter disarming.")
                 else
                     wf.executeScript("LVGL/messageBox").show("Save error", "Make sure your heli\nis disarmed.")

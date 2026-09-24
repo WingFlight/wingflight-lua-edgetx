@@ -30,7 +30,7 @@ local setpointBoostCutoff = "Setp boost cutoff"
 labels[#labels + 1] = { t = "Roll Dynamics",       x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.roll_response_time }
 fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.roll_accel_limit }
-if wf.apiVersion >= 12.08 then
+if wf.apiVersion >= 22.04 then
     fields[#fields + 1] = { t = setpointBoostGain,     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.roll_setpoint_boost_gain }
     fields[#fields + 1] = { t = setpointBoostCutoff,   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.roll_setpoint_boost_cutoff }
 end
@@ -38,7 +38,7 @@ end
 labels[#labels + 1] = { t = "Pitch Dynamics",      x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.pitch_response_time }
 fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.pitch_accel_limit }
-if wf.apiVersion >= 12.08 then
+if wf.apiVersion >= 22.04 then
     fields[#fields + 1] = { t = setpointBoostGain,     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.pitch_setpoint_boost_gain }
     fields[#fields + 1] = { t = setpointBoostCutoff,   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.pitch_setpoint_boost_cutoff }
 end
@@ -46,12 +46,12 @@ end
 labels[#labels + 1] = { t = "Yaw Dynamics",        x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = responseTime,          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_response_time }
 fields[#fields + 1] = { t = maxAcceleration,       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_accel_limit }
-if wf.apiVersion >= 12.08 then
+if wf.apiVersion >= 22.04 then
     fields[#fields + 1] = { t = setpointBoostGain,     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_setpoint_boost_gain }
     fields[#fields + 1] = { t = setpointBoostCutoff,   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_setpoint_boost_cutoff }
 end
 
-if wf.apiVersion >= 12.08 then
+if wf.apiVersion >= 22.04 then
     incY(lineSpacing * 0.5)
     labels[#labels + 1] = { t = "Dynamic",             x = x,          y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Ceiling gain",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = rcTuning.yaw_dynamic_ceiling_gain }

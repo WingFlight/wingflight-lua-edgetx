@@ -37,7 +37,7 @@ fields[#fields + 1] = { t = "Count",                    x = x + indent, y = incY
 fields[#fields + 1] = { t = "Q",                        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = filterConfig.dyn_notch_q,              id = "gyroDynamicNotchQ" }
 fields[#fields + 1] = { t = "Min Frequency",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = filterConfig.dyn_notch_min_hz,         id = "gyroDynamicNotchMinHz" }
 fields[#fields + 1] = { t = "Max Frequency",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = filterConfig.dyn_notch_max_hz,         id = "gyroDynamicNotchMaxHz"}
--- TODO: preset and min_hz for API >= 12.08
+-- TODO: preset and min_hz for API >= 22.04
 
 local function receivedFilterConfig(page, _)
     wf.onPageReady(page)

@@ -1,7 +1,5 @@
 -- WingFlight's mixer is a generic rule-based system (MSP_MIXER_INPUTS/MSP_MIXER_RULES/
--- MSP_MIXER_CURVES below), not Rotorflight's helicopter swashplate mixer. MSP_MIXER_CONFIG
--- itself now carries only a descriptive `model_type` -- the firmware does not branch on it,
--- it just lets the UI show a simplified named-airframe view vs. the raw rule editor.
+-- MSP_MIXER_CURVES below), not Rotorflight's helicopter swashplate mixer.
 
 local MIXER_INPUT_COUNT = 27 -- MIXER_IN_COUNT (mixer.h): NONE + 26 named stabilized/RC-command/RC-channel inputs
 local MIXER_RULE_COUNT = 32
@@ -13,6 +11,7 @@ local function getDefaults()
     defaults.model_type = { min = 0, max = 5, table = {
         [0] = "Regular Airplane", "Flying Wing", "V-Tail Airplane", "Delta Wing", "Rudder/Elevator Trainer", "Custom"
     } }
+    defaults.clone_from_pwm = { value = 1, min = 0, max = 1 }
     return defaults
 end
 
@@ -22,9 +21,10 @@ local function getMixerConfig(callback, callbackParam, data)
         command = 42, -- MSP_MIXER_CONFIG
         processReply = function(self, buf)
             data.model_type.value = wf.mspHelper.readU8(buf)
+            data.clone_from_pwm.value = #buf >= 2 and wf.mspHelper.readU8(buf) or 1
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 0 },
+        simulatorResponse = { 0, 1 },
     }
     wf.mspQueue:add(message)
 end
@@ -35,6 +35,7 @@ local function setMixerConfig(data)
         payload = {}
     }
     wf.mspHelper.writeU8(message.payload, data.model_type.value)
+    wf.mspHelper.writeU8(message.payload, data.clone_from_pwm.value or 0)
     wf.mspQueue:add(message)
 end
 
@@ -92,6 +93,7 @@ local function getMixerRules(callback, callbackParam)
                     speed = { value = wf.mspHelper.readU16(buf), min = 0, max = 60000 },
                     curve = { value = wf.mspHelper.readU8(buf), min = 0, max = MIXER_CURVE_COUNT },
                     condition = { value = wf.mspHelper.readU8(buf), min = 0, max = 16 },
+                    role = { value = (buf.offset or 1) <= #buf and wf.mspHelper.readU8(buf) or 0, min = 0, max = 2 },
                 }
             end
             callback(callbackParam, rules)
@@ -114,6 +116,7 @@ local function setMixerRule(index, rule)
     wf.mspHelper.writeU16(message.payload, rule.speed.value)
     wf.mspHelper.writeU8(message.payload, rule.curve.value)
     wf.mspHelper.writeU8(message.payload, rule.condition.value)
+    wf.mspHelper.writeU8(message.payload, rule.role.value or 0)
     wf.mspQueue:add(message)
 end
 

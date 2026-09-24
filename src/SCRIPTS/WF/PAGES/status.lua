@@ -78,7 +78,7 @@ local function armingDisableFlagsToString(flags)
             if i == 22 then t = t .. "DSHOT Bitbang" end
             if i == 23 then t = t .. "Acc Calibration" end
             if i == 24 then t = t .. "Motor Protocol" end
-            if wf.apiVersion < 12.09 then
+            if wf.apiVersion < 22.04 then
                 if i == 25 then t = t .. "Arm Switch" end
             else
                 if i == 25 then t = t .. "Override" end

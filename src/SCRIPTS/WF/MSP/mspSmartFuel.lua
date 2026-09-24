@@ -1,6 +1,6 @@
 local function getDefaults()
     local defaults = {}
-    if wf.apiVersion >= 12.09 then
+    if wf.apiVersion >= 22.04 then
         defaults.smartfuel_charge_drop_rate = { min = 0, max = 250, scale = 100, unit = wf.units.percentagePerSecond }
         defaults.smartfuel_mode = { min = 0, max = 3, table = { [0] = "OFF", "VOLTAGE", "CURRENT", "COMBINED" } }
         defaults.smartfuel_sag_gain = { min = 0, max = 100, unit = wf.units.percentage }
@@ -14,7 +14,7 @@ local function getSmartFuelConfig(callback, callbackParam, data)
     local message = {
         command = 16384, -- MSP2_GET_SMARTFUEL_CONFIG (0x4000)
         processReply = function(self, buf)
-            if wf.apiVersion >= 12.09 then
+            if wf.apiVersion >= 22.04 then
                 data.smartfuel_mode.value = wf.mspHelper.readU8(buf)
                 data.smartfuel_voltage_drop_rate.value = wf.mspHelper.readU8(buf)
                 data.smartfuel_charge_drop_rate.value = wf.mspHelper.readU8(buf)
@@ -33,7 +33,7 @@ local function setSmartFuelConfig(config)
         payload = {},
         simulatorResponse = {}
     }
-    if wf.apiVersion >= 12.09 then
+    if wf.apiVersion >= 22.04 then
         wf.mspHelper.writeU8(message.payload, config.smartfuel_mode.value)
         wf.mspHelper.writeU8(message.payload, config.smartfuel_voltage_drop_rate.value)
         wf.mspHelper.writeU8(message.payload, config.smartfuel_charge_drop_rate.value)

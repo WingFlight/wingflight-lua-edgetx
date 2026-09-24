@@ -1,6 +1,6 @@
 local function getDefaults()
     local defaults = {}
-    local protocolTable = { [0] = "NONE", "BLHELI32", "HOBBYWING V4", "HOBBYWING V5", "SCORPION", "KONTRONIK", "OMP", "ZTW", "APD", "OPENYGE", "FLYROTOR", "GRAUPNER", "XDFLY", "FrSky F.BUS" }
+    local protocolTable = { [0] = "NONE", "BLHELI32", "HOBBYWING V4", "HOBBYWING V5", "SCORPION", "KONTRONIK", "OMP", "ZTW", "APD", "OPENYGE", "FLYROTOR", "GRAUPNER", "XDFLY", "FrSky F.BUS", "SRXL2", "RECORD" }
 
     defaults.protocol = { min = 0, max = #protocolTable, table = protocolTable }
     defaults.half_duplex = { min = 0, max = 1, table = { [0] = "Off", "On" } }

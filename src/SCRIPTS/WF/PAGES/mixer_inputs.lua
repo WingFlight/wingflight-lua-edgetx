@@ -29,7 +29,7 @@ end
 
 -- Input index is the firmware's MIXER_IN_* enum (0=None, 1-4=Stabilized Roll/Pitch/Yaw/
 -- Throttle, 5-8=RC Command Roll/Pitch/Yaw/Throttle, 9-26=RC Channel Roll/Pitch/Yaw/
--- Throttle/Aux1-3/8-18) -- shown numerically here since the exact channel-to-servo/motor
+-- Throttle/Aux1-3/8-18, 27-29=Stabilized Thrust Vector Roll/Pitch/Yaw) -- shown numerically here since the exact channel-to-servo/motor
 -- mapping is board/target specific and not worth guessing labels for.
 labels[#labels + 1] = { t = "Mixer Inputs", x = x, y = incY(lineSpacing) }
 fields[1] = { t = "Input",  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = { min = 0, max = mspMixer.MIXER_INPUT_COUNT - 1 }, postEdit = onChangeInput }

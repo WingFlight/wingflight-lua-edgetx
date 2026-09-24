@@ -1,7 +1,7 @@
 -- WingFlight's mixer is a generic rule-based system (MSP_MIXER_INPUTS/MSP_MIXER_RULES/
 -- MSP_MIXER_CURVES below), not Rotorflight's helicopter swashplate mixer.
 
-local MIXER_INPUT_COUNT = 27 -- MIXER_IN_COUNT (mixer.h): NONE + 26 named stabilized/RC-command/RC-channel inputs
+local MIXER_INPUT_COUNT = 30 -- MIXER_IN_COUNT (pg/mixer.h): NONE + 26 stabilized/RC-command/RC-channel inputs + 3 thrust-vector inputs
 local MIXER_RULE_COUNT = 32
 local MIXER_CURVE_COUNT = 8
 local MIXER_CURVE_POINTS = 9

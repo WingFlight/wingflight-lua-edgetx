@@ -66,9 +66,10 @@ end
 local previousArmState = 0
 local function setArmState(widget)
     if not getValue then return end -- not available at boot time
-    local armState = getValue("ARM")
+    -- Bit 0 of the packed system status word is ARMED
+    local armState = getValue("STAT")
     --[NIR
-    -- Use ANT instead of ARM in the simulator
+    -- Use ANT instead of STAT in the simulator
     if wf and wf.runningInSimulator then armState = getValue("ANT") end
     --]]
     if armState ~= previousArmState then

@@ -9,17 +9,14 @@ local aliases = {
     { sourceName = "5111", aliasId = 0xEF11, aliasName = "AdjV", unit = UNIT_RAW, prec = 0 },
     { sourceName = "5120", aliasId = 0xEF20, aliasName = "MDL#", unit = UNIT_RAW, prec = 0 },
     { sourceName = "5121", aliasId = 0xEF21, aliasName = "Mode", unit = UNIT_RAW, prec = 0 },
-    { sourceName = "5122", aliasId = 0xEF22, aliasName = "ARM",  unit = UNIT_RAW, prec = 0 },
     { sourceName = "5123", aliasId = 0xEF23, aliasName = "ARMD", unit = UNIT_RAW, prec = 0 },
-    { sourceName = "5124", aliasId = 0xEF24, aliasName = "Resc", unit = UNIT_RAW, prec = 0 },
     { sourceName = "5125", aliasId = 0xEF25, aliasName = "Gov",  unit = UNIT_RAW, prec = 0 },
     { sourceName = "5128", aliasId = 0xEF28, aliasName = "EscF", unit = UNIT_RAW, prec = 0 },
     { sourceName = "5129", aliasId = 0xEF29, aliasName = "Esc#", unit = UNIT_RAW, prec = 0 },
     { sourceName = "512B", aliasId = 0xEF2B, aliasName = "Es2#", unit = UNIT_RAW, prec = 0 },
-    { sourceName = "5130", aliasId = 0xEF30, aliasName = "PID#", unit = UNIT_RAW, prec = 0 },
-    { sourceName = "5131", aliasId = 0xEF31, aliasName = "RTE#", unit = UNIT_RAW, prec = 0 },
-    { sourceName = "5132", aliasId = 0xEF32, aliasName = "LED#", unit = UNIT_RAW, prec = 0 },
-    { sourceName = "5133", aliasId = 0xEF33, aliasName = "BAT#", unit = UNIT_RAW, prec = 0 },
+    -- Packed status words, see wftlm_sensors.lua's entries 120/121.
+    { sourceName = "5140", aliasId = 0xEF40, aliasName = "STAT", unit = UNIT_RAW, prec = 0 },
+    { sourceName = "5141", aliasId = 0xEF41, aliasName = "SCFG", unit = UNIT_RAW, prec = 0 },
     { sourceName = "51A0", aliasId = 0xEFA0, aliasName = "CPtc", unit = UNIT_DEGREE, prec = 1 },
     { sourceName = "51A1", aliasId = 0xEFA1, aliasName = "CRol", unit = UNIT_DEGREE, prec = 1 },
     { sourceName = "51A2", aliasId = 0xEFA2, aliasName = "CYaw", unit = UNIT_DEGREE, prec = 1 },
@@ -42,7 +39,7 @@ local aliases = {
     { sourceName = "52F4", aliasId = 0xEEF4, aliasName = "DBG4", unit = UNIT_RAW, prec = 0 },
     { sourceName = "52F5", aliasId = 0xEEF5, aliasName = "DBG5", unit = UNIT_RAW, prec = 0 },
     { sourceName = "52F6", aliasId = 0xEEF6, aliasName = "DBG6", unit = UNIT_RAW, prec = 0 },
-    { sourceName = "52F8", aliasId = 0xEEF8, aliasName = "DBG7", unit = UNIT_RAW, prec = 0 },
+    { sourceName = "52F7", aliasId = 0xEEF7, aliasName = "DBG7", unit = UNIT_RAW, prec = 0 },
 }
 
 local lookupInterval = 2

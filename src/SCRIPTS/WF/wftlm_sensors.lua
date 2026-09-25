@@ -284,8 +284,6 @@ local sensorsById  =  {
     [88] = { sid = 0x1200, name = "MDL#", unit = UNIT_RAW, prec = 0, dec = decU8 },
     -- Flight mode flags
     [89] = { sid = 0x1201, name = "Mode", unit = UNIT_RAW, prec = 0, dec = decU16 },
-    -- Arming flags
-    [90] = { sid = 0x1202, name = "ARM", unit = UNIT_RAW, prec = 0, dec = decU8 },
     -- Arming disable flags
     [91] = { sid = 0x1203, name = "ARMD", unit = UNIT_RAW, prec = 0, dec = decU32 },
     -- Rescue state
@@ -293,17 +291,15 @@ local sensorsById  =  {
     -- Governor state
     [93] = { sid = 0x1205, name = "Gov", unit = UNIT_RAW, prec = 0, dec = decU8 },
 
-    -- Current PID profile
-    [95] = { sid = 0x1211, name = "PID#", unit = UNIT_RAW, prec = 0, dec = decU8 },
-    -- Current Rate profile
-    [96] = { sid = 0x1212, name = "RTE#", unit = UNIT_RAW, prec = 0, dec = decU8 },
-    -- Battery profile
-    [97] = { sid = 0x1214, name = "BAT#", unit = UNIT_RAW, prec = 0, dec = decU8 },
-    -- Current LED profile
-    [98] = { sid = 0x1213, name = "LED#", unit = UNIT_RAW, prec = 0, dec = decU8 },
-
     -- Adjustment function
     [99] = { sid = 0x1220, name = "ADJ", unit = UNIT_RAW, prec = 0, dec = decAdjFunc },
+
+    -- Packed status words; bit layout in wingflight-firmware's src/main/telemetry/status.h.
+    -- They replace the arming flags (90), profile (95-98, 118) and GPS fix (119) sensors.
+    -- System status: armed, RX link, failsafe, GPS, battery, ...
+    [120] = { sid = 0x1230, name = "STAT", unit = UNIT_RAW, prec = 0, dec = decU32 },
+    -- System config: PID/rate/battery/TV profile numbers, config and hardware state
+    [121] = { sid = 0x1231, name = "SCFG", unit = UNIT_RAW, prec = 0, dec = decU32 },
 
     -- Debug
     [100] = {sid = 0xDB00, name = "DBG0", unit = UNIT_RAW, prec = 0, dec = decS32 },

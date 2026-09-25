@@ -39,7 +39,7 @@ local aliases = {
     { sourceName = "52F4", aliasId = 0xEEF4, aliasName = "DBG4", unit = UNIT_RAW, prec = 0 },
     { sourceName = "52F5", aliasId = 0xEEF5, aliasName = "DBG5", unit = UNIT_RAW, prec = 0 },
     { sourceName = "52F6", aliasId = 0xEEF6, aliasName = "DBG6", unit = UNIT_RAW, prec = 0 },
-    { sourceName = "52F8", aliasId = 0xEEF8, aliasName = "DBG7", unit = UNIT_RAW, prec = 0 },
+    { sourceName = "52F7", aliasId = 0xEEF7, aliasName = "DBG7", unit = UNIT_RAW, prec = 0 },
 }
 
 local lookupInterval = 2

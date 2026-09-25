@@ -1,3 +1,8 @@
+# 0.0.28
+
+Read FC status from the 0.0.28 firmware's SYSTEM_STATUS (120) and SYSTEM_CONFIG (121) telemetry sensors, shown as STAT and SCFG, and read the armed state from STAT in the WfTool widget. Drop the removed ARM/PID#/RTE#/LED#/BAT# sensors. Select both sensors on the FC: set telemetry_sensors = 3,4,5,6,15,43,50,52,58,59,60,89,91,99,120,121 and save.
+Alias DBG7 from S.Port 0x52F7, where the 0.0.28 firmware now sends DEBUG_7.
+
 # 0.0.27
 
 Require MSP API 22.4 and show the required version when connected to other firmware. Replace the old Rotorflight 12.x version checks with 22.4 for the battery, model, SmartFuel and filter settings.

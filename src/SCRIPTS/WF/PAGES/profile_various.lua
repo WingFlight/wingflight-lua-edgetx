@@ -60,6 +60,10 @@ local function buildProfileFields()
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_yaw }
+    labels[#labels + 1] = { t = "I-term Relax Cutoff",     x = x + indent, y = incY(lineSpacing), bold = false }
+    fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_roll }
+    fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_pitch }
+    fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_yaw }
 
     incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Auto Hover",              x = x,          y = incY(lineSpacing) }

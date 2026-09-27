@@ -18,10 +18,10 @@ collectgarbage()
 fields[#fields + 1] = { t = "Current PID profile",     x = x,          y = incY(lineSpacing), sp = x + sp * 1.17, data = { value = nil, min = 0, max = 5, table = { [0] = "1", "2", "3", "4", "5", "6" } }, preEdit = profileSwitcher.startPidEditing, postEdit = profileSwitcher.endPidEditing }
 
 incY(lineSpacing * 0.25)
-fields[#fields + 1] = { t = "I-term relax type",       x = x,          y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_type }
-fields[#fields + 1] = { t = "Cutoff point R",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_roll }
-fields[#fields + 1] = { t = "Cutoff point P",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_pitch }
-fields[#fields + 1] = { t = "Cutoff point Y",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_yaw }
+labels[#labels + 1] = { t = "I-term Relax Level",      x = x,          y = incY(lineSpacing) }
+fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_level_roll }
+fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_level_pitch }
+fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_level_yaw }
 labels[#labels + 1] = { t = "I-term Decay",            x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_limit }
 labels[#labels + 1] = { t = "Error Limit",             x = x,          y = incY(lineSpacing) }
@@ -55,7 +55,7 @@ return {
         wf.useApi("mspPidProfile").read(receivedPidProfile, self, pidProfile)
     end,
     write = function(self)
-        if pidProfile.iterm_relax_type.value then
+        if pidProfile.iterm_relax_level_roll.value then
             wf.useApi("mspPidProfile").write(pidProfile)
             wf.settingsSaved(true, false)
         end

@@ -61,7 +61,7 @@ local function buildProfileFields()
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_yaw }
-    labels[#labels + 1] = { t = "Bounce-back",             x = x + indent, y = incY(lineSpacing), bold = false }
+    labels[#labels + 1] = { t = "Bounce Back",             x = x + indent, y = incY(lineSpacing), bold = false }
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_yaw }

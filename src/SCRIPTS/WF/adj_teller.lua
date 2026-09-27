@@ -120,10 +120,10 @@ local adjfunctions = {
     id115 = { name = "Pitch Lock", wavs = { "pitch", "i", "decay" } },
     id116 = { name = "Yaw Lock", wavs = { "yaw", "i", "decay" } },
 
-    -- per-axis Bounce-back Suppression (1-10)
-    id120 = { name = "Roll Bounce-back Suppression", wavs = { "roll", "i", "cutoff" } },
-    id121 = { name = "Pitch Bounce-back Suppression", wavs = { "pitch", "i", "cutoff" } },
-    id122 = { name = "Yaw Bounce-back Suppression", wavs = { "yaw", "i", "cutoff" } },
+    -- per-axis Bounce Back (1-10)
+    id120 = { name = "Roll Bounce Back", wavs = { "roll", "i", "cutoff" } },
+    id121 = { name = "Pitch Bounce Back", wavs = { "pitch", "i", "cutoff" } },
+    id122 = { name = "Yaw Bounce Back", wavs = { "yaw", "i", "cutoff" } },
 }
 
 local function getTelemetryId(name)

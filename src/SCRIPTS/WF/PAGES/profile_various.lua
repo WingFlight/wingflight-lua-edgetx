@@ -56,6 +56,7 @@ local function buildProfileFields()
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_yaw }
+    fields[#fields + 1] = { t = "I-term decay time",       x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time }
 
     incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Auto Hover",              x = x,          y = incY(lineSpacing) }

@@ -1,5 +1,5 @@
 -- MSP_PID_PROFILE / MSP_SET_PID_PROFILE: verified against Wingflight msp.c.
--- The 47-byte base is followed by roll deadband (1), throttle assist (4),
+-- The 49-byte base is followed by roll deadband (1), throttle assist (4),
 -- then API 22.4 axis limits (4). Only write extensions received from the FC.
 local axisLimits = {
     {key = "angle_roll_limit", shared = "angle_level_limit", max = 90},
@@ -11,7 +11,9 @@ local axisLimits = {
 local function getDefaults()
     local data = {}
     data.pid_mode = { min = 0, max = 250 }
-    data.iterm_decay_time = { min = 1, max = 100, scale = 100, unit = wf.units.seconds }
+    data.iterm_decay_time_roll = { min = 1, max = 100, scale = 100, unit = wf.units.seconds }
+    data.iterm_decay_time_pitch = { min = 1, max = 100, scale = 100, unit = wf.units.seconds }
+    data.iterm_decay_time_yaw = { min = 1, max = 100, scale = 100, unit = wf.units.seconds }
     data.iterm_decay_limit = { min = 0, max = 250, unit = wf.units.degreesPerSecond }
     data.error_limit_roll = { min = 0, max = 180, unit = wf.units.degrees }
     data.error_limit_pitch = { min = 0, max = 180, unit = wf.units.degrees }
@@ -68,7 +70,9 @@ local function getPidProfile(callback, callbackParam, data)
         command = 94, -- MSP_PID_PROFILE
         processReply = function(self, buf)
             data.pid_mode.value = wf.mspHelper.readU8(buf)
-            data.iterm_decay_time.value = wf.mspHelper.readU8(buf)
+            data.iterm_decay_time_roll.value = wf.mspHelper.readU8(buf)
+            data.iterm_decay_time_pitch.value = wf.mspHelper.readU8(buf)
+            data.iterm_decay_time_yaw.value = wf.mspHelper.readU8(buf)
             data.iterm_decay_limit.value = wf.mspHelper.readU8(buf)
             data.error_limit_roll.value = wf.mspHelper.readU8(buf)
             data.error_limit_pitch.value = wf.mspHelper.readU8(buf)
@@ -109,9 +113,9 @@ local function getPidProfile(callback, callbackParam, data)
             data.gain_curve_pitch.value = wf.mspHelper.readU8(buf)
             data.gain_curve_yaw.value = wf.mspHelper.readU8(buf)
             data.atthold_max_rate.value = wf.mspHelper.readU16(buf)
-            data.has_roll_deadband = #buf >= 48
-            data.has_throttle_assist = #buf >= 52
-            data.has_axis_limits = #buf >= 56
+            data.has_roll_deadband = #buf >= 50
+            data.has_throttle_assist = #buf >= 54
+            data.has_axis_limits = #buf >= 58
             data.autohover_roll_deadband.value = data.has_roll_deadband and wf.mspHelper.readU8(buf) or nil
             data.autohover_throttle_assist_gain.value = nil
             data.autohover_throttle_assist_max.value = nil
@@ -163,7 +167,9 @@ local function setPidProfile(data)
         simulatorResponse = {}
     }
     wf.mspHelper.writeU8(message.payload, data.pid_mode.value)
-    wf.mspHelper.writeU8(message.payload, data.iterm_decay_time.value)
+    wf.mspHelper.writeU8(message.payload, data.iterm_decay_time_roll.value)
+    wf.mspHelper.writeU8(message.payload, data.iterm_decay_time_pitch.value)
+    wf.mspHelper.writeU8(message.payload, data.iterm_decay_time_yaw.value)
     wf.mspHelper.writeU8(message.payload, data.iterm_decay_limit.value)
     wf.mspHelper.writeU8(message.payload, data.error_limit_roll.value)
     wf.mspHelper.writeU8(message.payload, data.error_limit_pitch.value)

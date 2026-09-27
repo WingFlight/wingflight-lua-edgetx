@@ -209,7 +209,7 @@ local mspPidProfileReplacements = {
     files = { "SCRIPTS/WF/MSP/mspPidProfile.lua", "SCRIPTS/WF/PAGES/profile_various.lua", "SCRIPTS/WF/PAGES/profile_pidcon.lua" },
 
     { ".pid_mode", "[0]" },
-    { ".iterm_decay_time", "[1]" },
+    { ".iterm_decay_time_roll", "[1]" },
     { ".iterm_decay_limit", "[2]" },
     { ".error_rotation", "[3]" },
     { ".error_limit_roll", "[4]" },
@@ -251,6 +251,8 @@ local mspPidProfileReplacements = {
     { ".gain_curve_pitch", "[40]" },
     { ".gain_curve_yaw", "[41]" },
     { ".atthold_max_rate", "[42]" },
+    { ".iterm_decay_time_pitch", "[43]" },
+    { ".iterm_decay_time_yaw", "[44]" },
 }
 
 local mspEscAm32Replacements = {

@@ -3,15 +3,15 @@ local function getDefaults()
     defaults.roll_p = { min = 0, max = 1000 }
     defaults.roll_i = { min = 0, max = 1000 }
     defaults.roll_d = { min = 0, max = 1000 }
-    defaults.roll_f = { min = 0, max = 1000 }
+    defaults.roll_f = { min = 50, max = 1000 }
     defaults.pitch_p = { min = 0, max = 1000 }
     defaults.pitch_i = { min = 0, max = 1000 }
     defaults.pitch_d = { min = 0, max = 1000 }
-    defaults.pitch_f = { min = 0, max = 1000 }
+    defaults.pitch_f = { min = 50, max = 1000 }
     defaults.yaw_p = { min = 0, max = 1000 }
     defaults.yaw_i = { min = 0, max = 1000 }
     defaults.yaw_d = { min = 0, max = 1000 }
-    defaults.yaw_f = { min = 0, max = 1000 }
+    defaults.yaw_f = { min = 50, max = 1000 }
     defaults.roll_b = { min = 0, max = 1000 }
     defaults.pitch_b = { min = 0, max = 1000 }
     defaults.yaw_b = { min = 0, max = 1000 }

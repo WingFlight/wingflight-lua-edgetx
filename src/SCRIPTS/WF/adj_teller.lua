@@ -115,8 +115,10 @@ local adjfunctions = {
     -- Precomp cutoff
     id75 = { name = "Yaw Precomp Cutoff", wavs = { "ya-pr-cu" } },
 
-    -- I-term decay time (0.01 s)
-    id114 = { name = "I-term Decay Time", wavs = { "i", "decay" } },
+    -- per-axis I-term decay time (0.01 s)
+    id114 = { name = "Roll I-term Decay Time", wavs = { "roll", "i", "decay" } },
+    id115 = { name = "Pitch I-term Decay Time", wavs = { "pitch", "i", "decay" } },
+    id116 = { name = "Yaw I-term Decay Time", wavs = { "yaw", "i", "decay" } },
 }
 
 local function getTelemetryId(name)

@@ -27,9 +27,9 @@ local function getDefaults()
     data.iterm_relax_level_roll = { min = 10, max = 250, unit = wf.units.degreesPerSecond }
     data.iterm_relax_level_pitch = { min = 10, max = 250, unit = wf.units.degreesPerSecond }
     data.iterm_relax_level_yaw = { min = 10, max = 250, unit = wf.units.degreesPerSecond }
-    data.iterm_relax_cutoff_roll = { min = 1, max = 100, unit = wf.units.herz }
-    data.iterm_relax_cutoff_pitch = { min = 1, max = 100, unit = wf.units.herz }
-    data.iterm_relax_cutoff_yaw = { min = 1, max = 100, unit = wf.units.herz }
+    data.bounceback_roll = { min = 1, max = 10 }
+    data.bounceback_pitch = { min = 1, max = 10 }
+    data.bounceback_yaw = { min = 1, max = 10 }
     data.angle_level_strength = { min = 0, max = 200 }
     data.angle_level_limit = { min = 10, max = 90, unit = wf.units.degrees }
     data.horizon_level_strength = { min = 0, max = 200 }
@@ -88,9 +88,9 @@ local function getPidProfile(callback, callbackParam, data)
             data.iterm_relax_level_roll.value = wf.mspHelper.readU8(buf)
             data.iterm_relax_level_pitch.value = wf.mspHelper.readU8(buf)
             data.iterm_relax_level_yaw.value = wf.mspHelper.readU8(buf)
-            data.iterm_relax_cutoff_roll.value = wf.mspHelper.readU8(buf)
-            data.iterm_relax_cutoff_pitch.value = wf.mspHelper.readU8(buf)
-            data.iterm_relax_cutoff_yaw.value = wf.mspHelper.readU8(buf)
+            data.bounceback_roll.value = wf.mspHelper.readU8(buf)
+            data.bounceback_pitch.value = wf.mspHelper.readU8(buf)
+            data.bounceback_yaw.value = wf.mspHelper.readU8(buf)
             data.angle_level_strength.value = wf.mspHelper.readU8(buf)
             data.angle_level_limit.value = wf.mspHelper.readU8(buf)
             data.horizon_level_strength.value = wf.mspHelper.readU8(buf)
@@ -187,9 +187,9 @@ local function setPidProfile(data)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_level_roll.value)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_level_pitch.value)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_level_yaw.value)
-    wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_roll.value)
-    wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_pitch.value)
-    wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_yaw.value)
+    wf.mspHelper.writeU8(message.payload, data.bounceback_roll.value)
+    wf.mspHelper.writeU8(message.payload, data.bounceback_pitch.value)
+    wf.mspHelper.writeU8(message.payload, data.bounceback_yaw.value)
     wf.mspHelper.writeU8(message.payload, data.angle_level_strength.value)
     wf.mspHelper.writeU8(message.payload, data.angle_level_limit.value)
     wf.mspHelper.writeU8(message.payload, data.horizon_level_strength.value)

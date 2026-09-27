@@ -43,27 +43,28 @@ local function buildProfileFields()
     fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.horizon_level_strength,         id = "profilesHorizonModeGain" }
 
     incY(lineSpacing * 0.25)
-    labels[#labels + 1] = { t = "Fixed-Wing TPA",          x = x,          y = incY(lineSpacing) }
+    labels[#labels + 1] = { t = "Throttle",                x = x,          y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_tpa_gain }
     fields[#fields + 1] = { t = "Curve",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_tpa_curve }
 
     incY(lineSpacing * 0.25)
-    labels[#labels + 1] = { t = "Master Gains",            x = x,          y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_roll }
-    fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_pitch }
-    fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_yaw }
-    labels[#labels + 1] = { t = "Gain Curve",              x = x + indent, y = incY(lineSpacing), bold = false }
+    labels[#labels + 1] = { t = "Flight Feel",             x = x,          y = incY(lineSpacing) }
+    labels[#labels + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), bold = false }
+    fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_roll }
+    fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_pitch }
+    fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_yaw }
+    labels[#labels + 1] = { t = "Curve",                   x = x + indent, y = incY(lineSpacing), bold = false }
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_yaw }
-    labels[#labels + 1] = { t = "I-term Decay Time",       x = x + indent, y = incY(lineSpacing), bold = false }
+    labels[#labels + 1] = { t = "Lock",                    x = x + indent, y = incY(lineSpacing), bold = false }
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_yaw }
-    labels[#labels + 1] = { t = "I-term Relax Cutoff",     x = x + indent, y = incY(lineSpacing), bold = false }
-    fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_roll }
-    fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_pitch }
-    fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_yaw }
+    labels[#labels + 1] = { t = "Bounce-back",             x = x + indent, y = incY(lineSpacing), bold = false }
+    fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_roll }
+    fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_pitch }
+    fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_yaw }
 
     incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Auto Hover",              x = x,          y = incY(lineSpacing) }

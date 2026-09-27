@@ -11,7 +11,7 @@ local axisLimits = {
 local function getDefaults()
     local data = {}
     data.pid_mode = { min = 0, max = 250 }
-    data.iterm_decay_time = { min = 0, max = 250, scale = 10, unit = wf.units.seconds }
+    data.iterm_decay_time = { min = 1, max = 100, scale = 100, unit = wf.units.seconds }
     data.iterm_decay_limit = { min = 0, max = 250, unit = wf.units.degreesPerSecond }
     data.error_limit_roll = { min = 0, max = 180, unit = wf.units.degrees }
     data.error_limit_pitch = { min = 0, max = 180, unit = wf.units.degrees }

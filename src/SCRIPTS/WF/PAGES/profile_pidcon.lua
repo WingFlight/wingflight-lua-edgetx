@@ -23,7 +23,6 @@ fields[#fields + 1] = { t = "Cutoff point R",          x = x + indent, y = incY(
 fields[#fields + 1] = { t = "Cutoff point P",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_pitch }
 fields[#fields + 1] = { t = "Cutoff point Y",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_relax_cutoff_yaw }
 labels[#labels + 1] = { t = "I-term Decay",            x = x,          y = incY(lineSpacing) }
-fields[#fields + 1] = { t = "Time",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time }
 fields[#fields + 1] = { t = "Limit",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_limit }
 labels[#labels + 1] = { t = "Error Limit",             x = x,          y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Roll",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.error_limit_roll }

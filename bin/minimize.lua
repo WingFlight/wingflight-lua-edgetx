@@ -221,7 +221,7 @@ local mspPidProfileReplacements = {
     { ".dterm_cutoff_roll", "[10]" },
     { ".dterm_cutoff_pitch", "[11]" },
     { ".dterm_cutoff_yaw", "[12]" },
-    { ".iterm_relax_type", "[13]" },
+    { ".iterm_relax_level_roll", "[13]" },
     { ".iterm_relax_cutoff_roll", "[14]" },
     { ".iterm_relax_cutoff_pitch", "[15]" },
     { ".iterm_relax_cutoff_yaw", "[16]" },
@@ -253,6 +253,8 @@ local mspPidProfileReplacements = {
     { ".atthold_max_rate", "[42]" },
     { ".iterm_decay_time_pitch", "[43]" },
     { ".iterm_decay_time_yaw", "[44]" },
+    { ".iterm_relax_level_pitch", "[45]" },
+    { ".iterm_relax_level_yaw", "[46]" },
 }
 
 local mspEscAm32Replacements = {

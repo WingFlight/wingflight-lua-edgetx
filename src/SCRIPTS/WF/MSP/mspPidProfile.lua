@@ -1,5 +1,5 @@
 -- MSP_PID_PROFILE / MSP_SET_PID_PROFILE: verified against Wingflight msp.c.
--- The 49-byte base is followed by roll deadband (1), throttle assist (4),
+-- The 51-byte base is followed by roll deadband (1), throttle assist (4),
 -- then API 22.4 axis limits (4). Only write extensions received from the FC.
 local axisLimits = {
     {key = "angle_roll_limit", shared = "angle_level_limit", max = 90},
@@ -24,7 +24,9 @@ local function getDefaults()
     data.dterm_cutoff_roll = { min = 0, max = 250, unit = wf.units.herz }
     data.dterm_cutoff_pitch = { min = 0, max = 250, unit = wf.units.herz }
     data.dterm_cutoff_yaw = { min = 0, max = 250, unit = wf.units.herz }
-    data.iterm_relax_type = { min = 0, max = 2, table = { [0] = "OFF", "RP", "RPY" } }
+    data.iterm_relax_level_roll = { min = 10, max = 250, unit = wf.units.degreesPerSecond }
+    data.iterm_relax_level_pitch = { min = 10, max = 250, unit = wf.units.degreesPerSecond }
+    data.iterm_relax_level_yaw = { min = 10, max = 250, unit = wf.units.degreesPerSecond }
     data.iterm_relax_cutoff_roll = { min = 1, max = 100, unit = wf.units.herz }
     data.iterm_relax_cutoff_pitch = { min = 1, max = 100, unit = wf.units.herz }
     data.iterm_relax_cutoff_yaw = { min = 1, max = 100, unit = wf.units.herz }
@@ -83,7 +85,9 @@ local function getPidProfile(callback, callbackParam, data)
             data.dterm_cutoff_roll.value = wf.mspHelper.readU8(buf)
             data.dterm_cutoff_pitch.value = wf.mspHelper.readU8(buf)
             data.dterm_cutoff_yaw.value = wf.mspHelper.readU8(buf)
-            data.iterm_relax_type.value = wf.mspHelper.readU8(buf)
+            data.iterm_relax_level_roll.value = wf.mspHelper.readU8(buf)
+            data.iterm_relax_level_pitch.value = wf.mspHelper.readU8(buf)
+            data.iterm_relax_level_yaw.value = wf.mspHelper.readU8(buf)
             data.iterm_relax_cutoff_roll.value = wf.mspHelper.readU8(buf)
             data.iterm_relax_cutoff_pitch.value = wf.mspHelper.readU8(buf)
             data.iterm_relax_cutoff_yaw.value = wf.mspHelper.readU8(buf)
@@ -113,9 +117,9 @@ local function getPidProfile(callback, callbackParam, data)
             data.gain_curve_pitch.value = wf.mspHelper.readU8(buf)
             data.gain_curve_yaw.value = wf.mspHelper.readU8(buf)
             data.atthold_max_rate.value = wf.mspHelper.readU16(buf)
-            data.has_roll_deadband = #buf >= 50
-            data.has_throttle_assist = #buf >= 54
-            data.has_axis_limits = #buf >= 58
+            data.has_roll_deadband = #buf >= 52
+            data.has_throttle_assist = #buf >= 56
+            data.has_axis_limits = #buf >= 60
             data.autohover_roll_deadband.value = data.has_roll_deadband and wf.mspHelper.readU8(buf) or nil
             data.autohover_throttle_assist_gain.value = nil
             data.autohover_throttle_assist_max.value = nil
@@ -180,7 +184,9 @@ local function setPidProfile(data)
     wf.mspHelper.writeU8(message.payload, data.dterm_cutoff_roll.value)
     wf.mspHelper.writeU8(message.payload, data.dterm_cutoff_pitch.value)
     wf.mspHelper.writeU8(message.payload, data.dterm_cutoff_yaw.value)
-    wf.mspHelper.writeU8(message.payload, data.iterm_relax_type.value)
+    wf.mspHelper.writeU8(message.payload, data.iterm_relax_level_roll.value)
+    wf.mspHelper.writeU8(message.payload, data.iterm_relax_level_pitch.value)
+    wf.mspHelper.writeU8(message.payload, data.iterm_relax_level_yaw.value)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_roll.value)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_pitch.value)
     wf.mspHelper.writeU8(message.payload, data.iterm_relax_cutoff_yaw.value)

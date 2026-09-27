@@ -119,6 +119,11 @@ local adjfunctions = {
     id114 = { name = "Roll I-term Decay Time", wavs = { "roll", "i", "decay" } },
     id115 = { name = "Pitch I-term Decay Time", wavs = { "pitch", "i", "decay" } },
     id116 = { name = "Yaw I-term Decay Time", wavs = { "yaw", "i", "decay" } },
+
+    -- per-axis I-term relax cutoff (Hz)
+    id120 = { name = "Roll I-term Relax Cutoff", wavs = { "roll", "i", "cutoff" } },
+    id121 = { name = "Pitch I-term Relax Cutoff", wavs = { "pitch", "i", "cutoff" } },
+    id122 = { name = "Yaw I-term Relax Cutoff", wavs = { "yaw", "i", "cutoff" } },
 }
 
 local function getTelemetryId(name)

@@ -79,22 +79,6 @@ local function buildProfileFields()
     end
 
     incY(lineSpacing * 0.25)
-    labels[#labels + 1] = { t = "Auto Hover",              x = x,          y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_gain }
-    fields[#fields + 1] = { t = "Max angle",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_max_angle }
-    fields[#fields + 1] = { t = "Max rate",                 x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_max_rate }
-
-    if pidProfile.has_roll_deadband then
-        fields[#fields + 1] = { t = "Roll deadband", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_roll_deadband }
-    end
-    if pidProfile.has_throttle_assist then
-        labels[#labels + 1] = { t = "Throttle Assist", x = x, y = incY(lineSpacing) }
-        fields[#fields + 1] = { t = "Gain", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_throttle_assist_gain }
-        fields[#fields + 1] = { t = "Ceiling", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_throttle_assist_max }
-        fields[#fields + 1] = { t = "Trigger time", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.autohover_throttle_assist_trigger_ms }
-    end
-
-    incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Cross-Axis Relax",        x = x,          y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Roll strength",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_strength }
     fields[#fields + 1] = { t = "Pitch strength",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_pitch_strength }

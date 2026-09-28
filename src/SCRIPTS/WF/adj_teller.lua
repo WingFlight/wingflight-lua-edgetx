@@ -65,8 +65,7 @@ local adjfunctions = {
     id44 = { name = "Rescue Alt D Gain", wavs = { "rescue", "alt", "d", "gain" } },
 
     -- leveling
-    id45 = { name = "Angle Level Gain", wavs = { "angle", "level", "gain" } },
-    id46 = { name = "Horizon Level Gain", wavs = { "horizon", "level", "gain" } },
+    id45 = { name = "Self-Level Gain", wavs = { "angle", "level", "gain" } },
     id47 = { name = "Acro Trainer Gain", wavs = { "acro", "gain" } },
 
     -- governor

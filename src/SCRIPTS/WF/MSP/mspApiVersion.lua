@@ -1,5 +1,5 @@
 local REQUIRED_API_MAJOR = 22
-local REQUIRED_API_MINOR = 11
+local REQUIRED_API_MINOR = 12
 
 local function makeVersion(major, minor)
     return major + minor / 100 + 0.00001

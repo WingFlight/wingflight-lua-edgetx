@@ -33,7 +33,6 @@ local function getDefaults()
     data.bounceback_yaw = { min = 1, max = 10 }
     data.angle_level_strength = { min = 0, max = 200 }
     data.angle_level_limit = { min = 10, max = 90, unit = wf.units.degrees }
-    data.horizon_level_strength = { min = 0, max = 200 }
     data.trainer_gain = { min = 25, max = 255 }
     data.trainer_angle_limit = { min = 10, max = 80, unit = wf.units.degrees }
     data.atthold_gain = { min = 0, max = 250 }
@@ -90,7 +89,7 @@ local function getPidProfile(callback, callbackParam, data)
             data.bounceback_yaw.value = wf.mspHelper.readU8(buf)
             data.angle_level_strength.value = wf.mspHelper.readU8(buf)
             data.angle_level_limit.value = wf.mspHelper.readU8(buf)
-            data.horizon_level_strength.value = wf.mspHelper.readU8(buf)
+            wf.mspHelper.readU8(buf) -- reserved, was Horizon level strength (removed in API 22.12)
             data.trainer_gain.value = wf.mspHelper.readU8(buf)
             data.trainer_angle_limit.value = wf.mspHelper.readU8(buf)
             data.atthold_gain.value = wf.mspHelper.readU8(buf)
@@ -200,7 +199,7 @@ local function setPidProfile(data)
     wf.mspHelper.writeU8(message.payload, data.bounceback_yaw.value)
     wf.mspHelper.writeU8(message.payload, data.angle_level_strength.value)
     wf.mspHelper.writeU8(message.payload, data.angle_level_limit.value)
-    wf.mspHelper.writeU8(message.payload, data.horizon_level_strength.value)
+    wf.mspHelper.writeU8(message.payload, 0) -- reserved, was Horizon level strength
     wf.mspHelper.writeU8(message.payload, data.trainer_gain.value)
     wf.mspHelper.writeU8(message.payload, data.trainer_angle_limit.value)
     wf.mspHelper.writeU8(message.payload, data.atthold_gain.value)

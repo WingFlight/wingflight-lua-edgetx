@@ -31,7 +31,7 @@ local function buildProfileFields()
     else
         fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.trainer_angle_limit,            id = "profilesAcroTrainerLimit" }
     end
-    labels[#labels + 1] = { t = "Angle Mode",              x = x,          y = incY(lineSpacing) }
+    labels[#labels + 1] = { t = "Self-Level",              x = x,          y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_strength,           id = "profilesAngleModeGain" }
     if pidProfile.has_axis_limits then
         fields[#fields + 1] = { t = "Bank limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_roll_limit }
@@ -39,8 +39,6 @@ local function buildProfileFields()
     else
         fields[#fields + 1] = { t = "Maximum angle",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_limit,              id = "profilesAngleModeLimit" }
     end
-    labels[#labels + 1] = { t = "Horizon Mode",            x = x,          y = incY(lineSpacing) }
-    fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.horizon_level_strength,         id = "profilesHorizonModeGain" }
 
     incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Throttle",                x = x,          y = incY(lineSpacing) }

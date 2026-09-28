@@ -1,3 +1,11 @@
+# 0.0.29
+
+Require MSP API 22.10 (0.0.29 firmware). The firmware update resets every PID and thrust-vector profile to defaults, so note your tune before flashing.
+Rename the Master Gains block on Profile - Various to Flight Feel, with per-axis Master Gain, I-term Decay (0.01-1.00 s) and I-term Relax (1-10 score, higher = less bounce-back) groups. The relax type field is replaced by the per-axis relax level on the PID page because relax is always on. Adjustment functions 114-116 and 120-122 are announced by the same names.
+Move the gain curve assignments (Roll, Pitch, Yaw, Throttle) into their own Gain Curves group.
+Add GPS speed attenuation (SPA): a GPS Speed gain, and the Speed curve and Speed range under Gain Curves.
+Set the F gain minimum to 50 to match the firmware.
+
 # 0.0.28
 
 Read FC status from the 0.0.28 firmware's SYSTEM_STATUS (120) and SYSTEM_CONFIG (121) telemetry sensors, shown as STAT and SCFG, and read the armed state from STAT in the WfTool widget. Drop the removed ARM/PID#/RTE#/LED#/BAT# sensors. Select both sensors on the FC: set telemetry_sensors = 3,4,5,6,15,43,50,52,58,59,60,89,91,99,120,121 and save.

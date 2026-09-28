@@ -227,7 +227,6 @@ local mspPidProfileReplacements = {
     { ".bounceback_yaw", "[16]" },
     { ".angle_level_strength", "[17]" },
     { ".angle_level_limit", "[18]" },
-    { ".horizon_level_strength", "[19]" },
     { ".trainer_gain", "[20]" },
     { ".trainer_angle_limit", "[21]" },
     { ".atthold_gain", "[22]" },

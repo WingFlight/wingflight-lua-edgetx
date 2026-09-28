@@ -66,7 +66,6 @@ local adjfunctions = {
 
     -- leveling
     id45 = { name = "Angle Level Gain", wavs = { "angle", "level", "gain" } },
-    id46 = { name = "Horizon Level Gain", wavs = { "horizon", "level", "gain" } },
     id47 = { name = "Acro Trainer Gain", wavs = { "acro", "gain" } },
 
     -- governor

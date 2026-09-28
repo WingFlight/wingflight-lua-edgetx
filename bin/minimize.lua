@@ -255,6 +255,9 @@ local mspPidProfileReplacements = {
     { ".iterm_decay_time_yaw", "[44]" },
     { ".iterm_relax_level_pitch", "[45]" },
     { ".iterm_relax_level_yaw", "[46]" },
+    { ".fw_spa_gain", "[47]" },
+    { ".fw_spa_curve", "[48]" },
+    { ".fw_spa_speed_max", "[49]" },
 }
 
 local mspEscAm32Replacements = {

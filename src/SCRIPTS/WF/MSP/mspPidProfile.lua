@@ -1,6 +1,7 @@
 -- MSP_PID_PROFILE / MSP_SET_PID_PROFILE: verified against Wingflight msp.c.
 -- The 51-byte base is followed by roll deadband (1), throttle assist (4),
--- then API 22.4 axis limits (4). Only write extensions received from the FC.
+-- then API 22.4 axis limits (4), then API 22.10 GPS speed attenuation (4).
+-- Only write extensions received from the FC.
 local axisLimits = {
     {key = "angle_roll_limit", shared = "angle_level_limit", max = 90},
     {key = "angle_pitch_limit", shared = "angle_level_limit", max = 75},
@@ -60,6 +61,9 @@ local function getDefaults()
     data.autohover_throttle_assist_gain = { min = 0, max = 100, unit = wf.units.percentage }
     data.autohover_throttle_assist_max = { min = 0, max = 50, unit = wf.units.percentage }
     data.autohover_throttle_assist_trigger_ms = { min = 0, max = 2000, unit = "ms" }
+    data.fw_spa_gain = { min = 25, max = 200, unit = wf.units.percentage }
+    data.fw_spa_curve = { min = 0, max = 8 }
+    data.fw_spa_speed_max = { min = 10, max = 600, unit = "km/h" }
     for _, limit in ipairs(axisLimits) do
         data[limit.key] = { min = 10, max = limit.max, unit = wf.units.degrees }
     end
@@ -120,6 +124,7 @@ local function getPidProfile(callback, callbackParam, data)
             data.has_roll_deadband = #buf >= 52
             data.has_throttle_assist = #buf >= 56
             data.has_axis_limits = #buf >= 60
+            data.has_fw_spa = #buf >= 64
             data.autohover_roll_deadband.value = data.has_roll_deadband and wf.mspHelper.readU8(buf) or nil
             data.autohover_throttle_assist_gain.value = nil
             data.autohover_throttle_assist_max.value = nil
@@ -142,6 +147,14 @@ local function getPidProfile(callback, callbackParam, data)
                     field.max = math.max(limit.max, field.value)
                 end
             end
+            data.fw_spa_gain.value = nil
+            data.fw_spa_curve.value = nil
+            data.fw_spa_speed_max.value = nil
+            if data.has_fw_spa then
+                data.fw_spa_gain.value = wf.mspHelper.readU8(buf)
+                data.fw_spa_curve.value = wf.mspHelper.readU8(buf)
+                data.fw_spa_speed_max.value = wf.mspHelper.readU16(buf)
+            end
             callback(callbackParam, data)
         end,
         simulatorResponse = {
@@ -158,7 +171,8 @@ local function getPidProfile(callback, callbackParam, data)
             0, 0, 0,
             44, 1,
             5, 0, 15, 44, 1,
-            0, 0, 0, 0
+            0, 0, 0, 0,
+            100, 0, 150, 0
         },
     }
     wf.mspQueue:add(message)
@@ -230,6 +244,11 @@ local function setPidProfile(data)
             local value = field.value == field.initial and field.raw or math.max(10, math.min(limit.max, field.value))
             wf.mspHelper.writeU8(message.payload, value)
         end
+    end
+    if data.has_axis_limits and data.has_fw_spa then
+        wf.mspHelper.writeU8(message.payload, data.fw_spa_gain.value)
+        wf.mspHelper.writeU8(message.payload, data.fw_spa_curve.value)
+        wf.mspHelper.writeU16(message.payload, data.fw_spa_speed_max.value)
     end
     wf.mspQueue:add(message)
 end

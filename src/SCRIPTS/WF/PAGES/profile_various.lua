@@ -45,6 +45,11 @@ local function buildProfileFields()
     incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Throttle",                x = x,          y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_tpa_gain }
+    if pidProfile.has_fw_spa then
+        -- GPS speed attenuation: needs a GPS fix and a Speed curve below
+        labels[#labels + 1] = { t = "GPS Speed",           x = x,          y = incY(lineSpacing) }
+        fields[#fields + 1] = { t = "Gain",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_spa_gain }
+    end
 
     incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Flight Feel",             x = x,          y = incY(lineSpacing) }
@@ -68,6 +73,10 @@ local function buildProfileFields()
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.gain_curve_yaw }
     fields[#fields + 1] = { t = "Throttle",                x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_tpa_curve }
+    if pidProfile.has_fw_spa then
+        fields[#fields + 1] = { t = "Speed",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_spa_curve }
+        fields[#fields + 1] = { t = "Speed range",         x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.fw_spa_speed_max }
+    end
 
     incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Auto Hover",              x = x,          y = incY(lineSpacing) }

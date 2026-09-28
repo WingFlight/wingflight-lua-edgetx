@@ -48,15 +48,15 @@ local function buildProfileFields()
 
     incY(lineSpacing * 0.25)
     labels[#labels + 1] = { t = "Flight Feel",             x = x,          y = incY(lineSpacing) }
-    labels[#labels + 1] = { t = "Gain",                    x = x + indent, y = incY(lineSpacing), bold = false }
+    labels[#labels + 1] = { t = "Master Gain",             x = x + indent, y = incY(lineSpacing), bold = false }
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.master_gain_yaw }
-    labels[#labels + 1] = { t = "Lock",                    x = x + indent, y = incY(lineSpacing), bold = false }
+    labels[#labels + 1] = { t = "I-term Decay",            x = x + indent, y = incY(lineSpacing), bold = false }
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.iterm_decay_time_yaw }
-    labels[#labels + 1] = { t = "Bounce Back",             x = x + indent, y = incY(lineSpacing), bold = false }
+    labels[#labels + 1] = { t = "I-term Relax",            x = x + indent, y = incY(lineSpacing), bold = false }
     fields[#fields + 1] = { t = "Roll",                    x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_roll }
     fields[#fields + 1] = { t = "Pitch",                   x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_pitch }
     fields[#fields + 1] = { t = "Yaw",                     x = x + indent*2, y = incY(lineSpacing), sp = x + sp, data = pidProfile.bounceback_yaw }

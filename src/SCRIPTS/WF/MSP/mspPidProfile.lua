@@ -1,5 +1,5 @@
 -- MSP_PID_PROFILE / MSP_SET_PID_PROFILE: verified against Wingflight msp.c.
--- The 51-byte base is followed by roll deadband (1), throttle assist (4),
+-- The 51-byte base is followed by 5 reserved bytes (1 + 4, Auto Hover until 22.11),
 -- then API 22.4 axis limits (4), then API 22.10 GPS speed attenuation (4).
 -- Only write extensions received from the FC.
 local axisLimits = {
@@ -46,9 +46,6 @@ local function getDefaults()
     data.master_gain_roll = { min = 25, max = 1000, unit = wf.units.percentage }
     data.master_gain_pitch = { min = 25, max = 1000, unit = wf.units.percentage }
     data.master_gain_yaw = { min = 25, max = 1000, unit = wf.units.percentage }
-    data.autohover_gain = { min = 0, max = 250 }
-    data.autohover_max_angle = { min = 0, max = 90, unit = wf.units.degrees }
-    data.autohover_max_rate = { min = 0, max = 1800, unit = wf.units.degreesPerSecond }
     data.cross_axis_relax_strength = { min = 0, max = 100, unit = wf.units.percentage }
     data.cross_axis_relax_level = { min = 10, max = 250 }
     data.cross_axis_relax_cutoff = { min = 1, max = 100, unit = wf.units.herz }
@@ -57,10 +54,6 @@ local function getDefaults()
     data.gain_curve_pitch = { min = 0, max = 8 }
     data.gain_curve_yaw = { min = 0, max = 8 }
     data.atthold_max_rate = { min = 0, max = 1800, unit = wf.units.degreesPerSecond }
-    data.autohover_roll_deadband = { min = 0, max = 100, unit = wf.units.percentage }
-    data.autohover_throttle_assist_gain = { min = 0, max = 100, unit = wf.units.percentage }
-    data.autohover_throttle_assist_max = { min = 0, max = 50, unit = wf.units.percentage }
-    data.autohover_throttle_assist_trigger_ms = { min = 0, max = 2000, unit = "ms" }
     data.fw_spa_gain = { min = 25, max = 200, unit = wf.units.percentage }
     data.fw_spa_curve = { min = 0, max = 8 }
     data.fw_spa_speed_max = { min = 10, max = 600, unit = "km/h" }
@@ -110,9 +103,10 @@ local function getPidProfile(callback, callbackParam, data)
             data.master_gain_roll.value = wf.mspHelper.readU16(buf)
             data.master_gain_pitch.value = wf.mspHelper.readU16(buf)
             data.master_gain_yaw.value = wf.mspHelper.readU16(buf)
-            data.autohover_gain.value = wf.mspHelper.readU8(buf)
-            data.autohover_max_angle.value = wf.mspHelper.readU8(buf)
-            data.autohover_max_rate.value = wf.mspHelper.readU16(buf)
+            -- reserved, was Auto Hover gain/max angle/max rate (removed in API 22.11)
+            wf.mspHelper.readU8(buf)
+            wf.mspHelper.readU8(buf)
+            wf.mspHelper.readU16(buf)
             data.cross_axis_relax_strength.value = wf.mspHelper.readU8(buf)
             data.cross_axis_relax_level.value = wf.mspHelper.readU8(buf)
             data.cross_axis_relax_cutoff.value = wf.mspHelper.readU8(buf)
@@ -125,14 +119,14 @@ local function getPidProfile(callback, callbackParam, data)
             data.has_throttle_assist = #buf >= 56
             data.has_axis_limits = #buf >= 60
             data.has_fw_spa = #buf >= 64
-            data.autohover_roll_deadband.value = data.has_roll_deadband and wf.mspHelper.readU8(buf) or nil
-            data.autohover_throttle_assist_gain.value = nil
-            data.autohover_throttle_assist_max.value = nil
-            data.autohover_throttle_assist_trigger_ms.value = nil
+            -- reserved, was Auto Hover roll deadband and throttle assist
+            if data.has_roll_deadband then
+                wf.mspHelper.readU8(buf)
+            end
             if data.has_throttle_assist then
-                data.autohover_throttle_assist_gain.value = wf.mspHelper.readU8(buf)
-                data.autohover_throttle_assist_max.value = wf.mspHelper.readU8(buf)
-                data.autohover_throttle_assist_trigger_ms.value = wf.mspHelper.readU16(buf)
+                wf.mspHelper.readU8(buf)
+                wf.mspHelper.readU8(buf)
+                wf.mspHelper.readU16(buf)
             end
             for _, limit in ipairs(axisLimits) do
                 local field = data[limit.key]
@@ -219,9 +213,9 @@ local function setPidProfile(data)
     wf.mspHelper.writeU16(message.payload, data.master_gain_roll.value)
     wf.mspHelper.writeU16(message.payload, data.master_gain_pitch.value)
     wf.mspHelper.writeU16(message.payload, data.master_gain_yaw.value)
-    wf.mspHelper.writeU8(message.payload, data.autohover_gain.value)
-    wf.mspHelper.writeU8(message.payload, data.autohover_max_angle.value)
-    wf.mspHelper.writeU16(message.payload, data.autohover_max_rate.value)
+    wf.mspHelper.writeU8(message.payload, 0)  -- reserved, was Auto Hover gain
+    wf.mspHelper.writeU8(message.payload, 0)  -- reserved, was Auto Hover max angle
+    wf.mspHelper.writeU16(message.payload, 0) -- reserved, was Auto Hover max rate
     wf.mspHelper.writeU8(message.payload, data.cross_axis_relax_strength.value)
     wf.mspHelper.writeU8(message.payload, data.cross_axis_relax_level.value)
     wf.mspHelper.writeU8(message.payload, data.cross_axis_relax_cutoff.value)
@@ -231,12 +225,13 @@ local function setPidProfile(data)
     wf.mspHelper.writeU8(message.payload, data.gain_curve_yaw.value)
     wf.mspHelper.writeU16(message.payload, data.atthold_max_rate.value)
     if data.has_roll_deadband then
-        wf.mspHelper.writeU8(message.payload, data.autohover_roll_deadband.value)
+        wf.mspHelper.writeU8(message.payload, 0) -- reserved, was Auto Hover roll deadband
     end
     if data.has_throttle_assist then
-        wf.mspHelper.writeU8(message.payload, data.autohover_throttle_assist_gain.value)
-        wf.mspHelper.writeU8(message.payload, data.autohover_throttle_assist_max.value)
-        wf.mspHelper.writeU16(message.payload, data.autohover_throttle_assist_trigger_ms.value)
+        -- reserved, was Auto Hover throttle assist gain/max/trigger
+        wf.mspHelper.writeU8(message.payload, 0)
+        wf.mspHelper.writeU8(message.payload, 0)
+        wf.mspHelper.writeU16(message.payload, 0)
     end
     if data.has_axis_limits then
         for _, limit in ipairs(axisLimits) do

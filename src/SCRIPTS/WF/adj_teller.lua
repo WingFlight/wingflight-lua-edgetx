@@ -115,15 +115,15 @@ local adjfunctions = {
     -- Precomp cutoff
     id75 = { name = "Yaw Precomp Cutoff", wavs = { "ya-pr-cu" } },
 
-    -- per-axis Lock (I-term decay time, 0.01 s)
-    id114 = { name = "Roll Lock", wavs = { "roll", "i", "decay" } },
-    id115 = { name = "Pitch Lock", wavs = { "pitch", "i", "decay" } },
-    id116 = { name = "Yaw Lock", wavs = { "yaw", "i", "decay" } },
+    -- per-axis I-term decay time (0.01 s)
+    id114 = { name = "Roll I-term Decay", wavs = { "roll", "i", "decay" } },
+    id115 = { name = "Pitch I-term Decay", wavs = { "pitch", "i", "decay" } },
+    id116 = { name = "Yaw I-term Decay", wavs = { "yaw", "i", "decay" } },
 
-    -- per-axis Bounce Back (1-10)
-    id120 = { name = "Roll Bounce Back", wavs = { "roll", "i", "cutoff" } },
-    id121 = { name = "Pitch Bounce Back", wavs = { "pitch", "i", "cutoff" } },
-    id122 = { name = "Yaw Bounce Back", wavs = { "yaw", "i", "cutoff" } },
+    -- per-axis I-term Relax score (1-10)
+    id120 = { name = "Roll I-term Relax", wavs = { "roll", "i", "cutoff" } },
+    id121 = { name = "Pitch I-term Relax", wavs = { "pitch", "i", "cutoff" } },
+    id122 = { name = "Yaw I-term Relax", wavs = { "yaw", "i", "cutoff" } },
 }
 
 local function getTelemetryId(name)

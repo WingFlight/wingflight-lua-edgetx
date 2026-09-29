@@ -254,6 +254,7 @@ local mspPidProfileReplacements = {
     { ".fw_spa_gain", "[47]" },
     { ".fw_spa_curve", "[48]" },
     { ".fw_spa_speed_max", "[49]" },
+    { ".angle_level_damping", "[50]" },
 }
 
 local mspEscAm32Replacements = {

@@ -33,6 +33,9 @@ local function buildProfileFields()
     end
     labels[#labels + 1] = { t = "Angle Mode",              x = x,          y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_strength,           id = "profilesAngleModeGain" }
+    if pidProfile.has_level_damping then
+        fields[#fields + 1] = { t = "Damping",             x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_damping }
+    end
     if pidProfile.has_axis_limits then
         fields[#fields + 1] = { t = "Bank limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_roll_limit }
         fields[#fields + 1] = { t = "Pitch limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_pitch_limit }

@@ -86,6 +86,16 @@ local function buildProfileFields()
     fields[#fields + 1] = { t = "Level",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_level }
     fields[#fields + 1] = { t = "Cutoff",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_cutoff }
 
+    if pidProfile.has_snap_relax then
+        -- Stops roll/pitch feedback fighting pop tops, pinwheels and snaps
+        incY(lineSpacing * 0.25)
+        labels[#labels + 1] = { t = "Snap Relax",          x = x,          y = incY(lineSpacing) }
+        fields[#fields + 1] = { t = "Strength",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.snap_relax_strength }
+        fields[#fields + 1] = { t = "Stick threshold",     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.snap_relax_threshold }
+        fields[#fields + 1] = { t = "Entry window",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.snap_relax_window }
+        fields[#fields + 1] = { t = "Fade-out",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.snap_relax_hold }
+    end
+
 end
 
 local function receivedPidProfile(page, _)

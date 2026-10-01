@@ -1,3 +1,10 @@
+# 0.0.30
+
+Require MSP API 22.13 (0.0.30 firmware). The firmware update resets every PID and thrust-vector profile to defaults, so note your tune before flashing.
+Add Snap Relax (strength, stick threshold, entry window, fade-out) and Angle Mode damping to Profile - Various.
+Remove the Auto Hover, Throttle Assist and Horizon settings, matching the firmware.
+Name the CRSF GPS course sensor GCrs instead of GHdg.
+
 # 0.0.29
 
 Require MSP API 22.10 (0.0.29 firmware). The firmware update resets every PID and thrust-vector profile to defaults, so note your tune before flashing.

@@ -43,9 +43,9 @@ local function getDefaults()
     data.bterm_cutoff_yaw = { min = 0, max = 250, unit = wf.units.herz }
     data.fw_tpa_gain = { min = 25, max = 200, unit = wf.units.percentage }
     data.fw_tpa_curve = { min = 0, max = 8 }
-    data.master_gain_roll = { min = 25, max = 1000, unit = wf.units.percentage }
-    data.master_gain_pitch = { min = 25, max = 1000, unit = wf.units.percentage }
-    data.master_gain_yaw = { min = 25, max = 1000, unit = wf.units.percentage }
+    data.master_gain_roll = { min = 25, max = 200, unit = wf.units.percentage }
+    data.master_gain_pitch = { min = 25, max = 200, unit = wf.units.percentage }
+    data.master_gain_yaw = { min = 25, max = 200, unit = wf.units.percentage }
     data.cross_axis_relax_strength = { min = 0, max = 100, unit = wf.units.percentage }
     data.cross_axis_relax_level = { min = 10, max = 250 }
     data.cross_axis_relax_cutoff = { min = 1, max = 100, unit = wf.units.herz }

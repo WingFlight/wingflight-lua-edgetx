@@ -1,7 +1,7 @@
 -- MSP_PID_PROFILE / MSP_SET_PID_PROFILE: verified against Wingflight msp.c.
 -- The 51-byte base is followed by 5 reserved bytes (1 + 4, Auto Hover until 22.11),
 -- then API 22.4 axis limits (4), then API 22.10 GPS speed attenuation (4),
--- then API 22.13 Angle mode damping (1), then snap relax (6).
+-- then API 22.13 Angle mode damping (1), then snap relax (6), then prop-hang relax (4).
 -- Only write extensions received from the FC.
 local axisLimits = {
     {key = "angle_roll_limit", shared = "angle_level_limit", max = 90},
@@ -62,6 +62,9 @@ local function getDefaults()
     data.snap_relax_threshold = { min = 20, max = 100, unit = wf.units.percentage }
     data.snap_relax_window = { min = 0, max = 1000, unit = "ms" }
     data.snap_relax_hold = { min = 0, max = 1000, unit = "ms" }
+    data.prop_hang_strength = { min = 0, max = 100, unit = wf.units.percentage }
+    data.prop_hang_angle = { min = 5, max = 45, unit = wf.units.degrees }
+    data.prop_hang_fade = { min = 0, max = 2000, unit = "ms" }
     for _, limit in ipairs(axisLimits) do
         data[limit.key] = { min = 10, max = limit.max, unit = wf.units.degrees }
     end
@@ -127,6 +130,7 @@ local function getPidProfile(callback, callbackParam, data)
             data.has_fw_spa = #buf >= 64
             data.has_level_damping = #buf >= 65
             data.has_snap_relax = #buf >= 71
+            data.has_prop_hang = #buf >= 75
             -- reserved, was Auto Hover roll deadband and throttle assist
             if data.has_roll_deadband then
                 wf.mspHelper.readU8(buf)
@@ -171,6 +175,14 @@ local function getPidProfile(callback, callbackParam, data)
                 data.snap_relax_window.value = wf.mspHelper.readU16(buf)
                 data.snap_relax_hold.value = wf.mspHelper.readU16(buf)
             end
+            data.prop_hang_strength.value = nil
+            data.prop_hang_angle.value = nil
+            data.prop_hang_fade.value = nil
+            if data.has_prop_hang then
+                data.prop_hang_strength.value = wf.mspHelper.readU8(buf)
+                data.prop_hang_angle.value = wf.mspHelper.readU8(buf)
+                data.prop_hang_fade.value = wf.mspHelper.readU16(buf)
+            end
             callback(callbackParam, data)
         end,
         simulatorResponse = {
@@ -189,7 +201,8 @@ local function getPidProfile(callback, callbackParam, data)
             0, 0, 0, 0,                     -- axis limits (inherit)
             100, 0, 150, 0,                 -- SPA gain, curve, speed max
             25,                             -- angle damping
-            100, 60, 144, 1, 150, 0         -- snap relax strength, threshold, window, hold
+            100, 60, 144, 1, 94, 1,         -- snap relax strength, threshold, window, hold (350 ms)
+            100, 20, 244, 1                 -- prop-hang relax strength, angle, fade (500 ms)
         },
     }
     wf.mspQueue:add(message)
@@ -276,6 +289,11 @@ local function setPidProfile(data)
         wf.mspHelper.writeU8(message.payload, data.snap_relax_threshold.value)
         wf.mspHelper.writeU16(message.payload, data.snap_relax_window.value)
         wf.mspHelper.writeU16(message.payload, data.snap_relax_hold.value)
+    end
+    if data.has_axis_limits and data.has_fw_spa and data.has_level_damping and data.has_snap_relax and data.has_prop_hang then
+        wf.mspHelper.writeU8(message.payload, data.prop_hang_strength.value)
+        wf.mspHelper.writeU8(message.payload, data.prop_hang_angle.value)
+        wf.mspHelper.writeU16(message.payload, data.prop_hang_fade.value)
     end
     wf.mspQueue:add(message)
 end

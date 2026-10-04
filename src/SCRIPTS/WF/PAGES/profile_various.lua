@@ -33,6 +33,9 @@ local function buildProfileFields()
     end
     labels[#labels + 1] = { t = "Angle Mode",              x = x,          y = incY(lineSpacing) }
     fields[#fields + 1] = { t = "Leveling gain",           x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_strength,           id = "profilesAngleModeGain" }
+    if pidProfile.has_level_damping then
+        fields[#fields + 1] = { t = "Damping",             x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_level_damping }
+    end
     if pidProfile.has_axis_limits then
         fields[#fields + 1] = { t = "Bank limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_roll_limit }
         fields[#fields + 1] = { t = "Pitch limit", x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.angle_pitch_limit }
@@ -82,6 +85,25 @@ local function buildProfileFields()
     fields[#fields + 1] = { t = "Pitch strength",          x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_pitch_strength }
     fields[#fields + 1] = { t = "Level",                   x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_level }
     fields[#fields + 1] = { t = "Cutoff",                  x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.cross_axis_relax_cutoff }
+
+    if pidProfile.has_snap_relax then
+        -- Stops roll/pitch/yaw feedback fighting pop tops, pinwheels and snaps
+        incY(lineSpacing * 0.25)
+        labels[#labels + 1] = { t = "Snap Relax",          x = x,          y = incY(lineSpacing) }
+        fields[#fields + 1] = { t = "Strength",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.snap_relax_strength }
+        fields[#fields + 1] = { t = "Stick threshold",     x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.snap_relax_threshold }
+        fields[#fields + 1] = { t = "Entry window",        x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.snap_relax_window }
+        fields[#fields + 1] = { t = "Fade-out",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.snap_relax_hold }
+    end
+
+    if pidProfile.has_prop_hang then
+        -- Lets the prop torque roll the airframe in a prop hang (roll I held back)
+        incY(lineSpacing * 0.25)
+        labels[#labels + 1] = { t = "Prop Hang",           x = x,          y = incY(lineSpacing) }
+        fields[#fields + 1] = { t = "Strength",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.prop_hang_strength }
+        fields[#fields + 1] = { t = "Angle",               x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.prop_hang_angle }
+        fields[#fields + 1] = { t = "Fade-out",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.prop_hang_fade }
+    end
 
 end
 

@@ -23,39 +23,40 @@ fields[3] = { t = "Rate Dynamics",           x = x + indent, y = incY(lineSpacin
 fields[4] = { t = "PID Gains",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[5] = { t = "PID Controller",          x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[6] = { t = "Profile - Various",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[7] = { t = "Battery",                 x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[8] = { t = "Servos",                  x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[9] = { t = "Mixer",                   x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[10] = { t = "Mixer Inputs",           x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[11] = { t = "Mixer Rules",            x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[12] = { t = "Gyro Filters",           x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[13] = { t = "Accelerometer Trim",     x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[7] = { t = "Tune Advisor",            x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[8] = { t = "Battery",                 x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[9] = { t = "Servos",                  x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[10] = { t = "Mixer",                   x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[11] = { t = "Mixer Inputs",           x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[12] = { t = "Mixer Rules",            x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[13] = { t = "Gyro Filters",           x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[14] = { t = "Accelerometer Trim",     x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 incY(lineSpacing * 0.5)
 labels[2] = { t = "Display Various Pages",   x = x, y = incY(lineSpacing) }
-fields[14] = { t = "Model",                  x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[15] = { t = "Experimental (!)",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[15] = { t = "Model",                  x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[16] = { t = "Experimental (!)",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 incY(lineSpacing * 0.5)
 labels[3] = { t = "Display ESC Pages",       x = x, y = incY(lineSpacing) }
-fields[16] = { t = "AM32",                   x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[17] = { t = "BLHeli_S",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[18] = { t = "Bluejay",                x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[19] = { t = "FLYROTOR",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[20] = { t = "HW Platinum V5",         x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[21] = { t = "Scorpion Tribunus",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[22] = { t = "XDFly/OMP/ZTW",          x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[23] = { t = "YGE",                    x = x + indent, y = incY(lineSpacing), sp = x + sp }
-fields[24] = { t = "ESC Sensor",             x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[17] = { t = "AM32",                   x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[18] = { t = "BLHeli_S",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[19] = { t = "Bluejay",                x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[20] = { t = "FLYROTOR",               x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[21] = { t = "HW Platinum V5",         x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[22] = { t = "Scorpion Tribunus",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[23] = { t = "XDFly/OMP/ZTW",          x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[24] = { t = "YGE",                    x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[25] = { t = "ESC Sensor",             x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 incY(lineSpacing * 0.5)
 labels[4] = { t = "Wfbg Options",           x = x, y = incY(lineSpacing) }
-fields[25] = { t = "Adjustment Teller",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
+fields[26] = { t = "Adjustment Teller",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
 if canUseLvgl then
     incY(lineSpacing * 0.5)
     labels[5] = { t = "Tool Options",        x = x, y = incY(lineSpacing) }
-    fields[26] = { t = "Use touch UI",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
+    fields[27] = { t = "Use touch UI",       x = x + indent, y = incY(lineSpacing), sp = x + sp }
 end
 
 local function setValues()
@@ -65,27 +66,28 @@ local function setValues()
     fields[4].data = { value = settings.showPidGains or 1, min = 0, max = 1, table = hideShow }
     fields[5].data = { value = settings.showPidController or 1, min = 0, max = 1, table = hideShow }
     fields[6].data = { value = settings.showProfileVarious or 1, min = 0, max = 1, table = hideShow }
-    fields[7].data = { value = settings.showBattery or 1, min = 0, max = 1, table = hideShow }
-    fields[8].data = { value = settings.showServos or 1, min = 0, max = 1, table = hideShow }
-    fields[9].data = { value = settings.showMixer or 1, min = 0, max = 1, table = hideShow }
-    fields[10].data = { value = settings.showMixerInputs or 0, min = 0, max = 1, table = hideShow }
-    fields[11].data = { value = settings.showMixerRules or 0, min = 0, max = 1, table = hideShow }
-    fields[12].data = { value = settings.showGyroFilters or 1, min = 0, max = 1, table = hideShow }
-    fields[13].data = { value = settings.showAccelerometerTrim or 1, min = 0, max = 1, table = hideShow }
-    fields[14].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = hideShow }
-    fields[15].data = { value = settings.showExperimental or 0, min = 0, max = 1, table = hideShow }
-    fields[16].data = { value = settings.showAm32 or 0, min = 0, max = 1, table = hideShow }
-    fields[17].data = { value = settings.showBlheliS or 0, min = 0, max = 1, table = hideShow }
-    fields[18].data = { value = settings.showBluejay or 0, min = 0, max = 1, table = hideShow }
-    fields[19].data = { value = settings.showFlyRotor or 0, min = 0, max = 1, table = hideShow }
-    fields[20].data = { value = settings.showPlatinumV5 or 0, min = 0, max = 1, table = hideShow }
-    fields[21].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = hideShow }
-    fields[22].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
-    fields[23].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
-    fields[24].data = { value = settings.showEscSensor or 1, min = 0, max = 1, table = hideShow }
-    fields[25].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
+    fields[7].data = { value = settings.showTuneAdvisor or 1, min = 0, max = 1, table = hideShow }
+    fields[8].data = { value = settings.showBattery or 1, min = 0, max = 1, table = hideShow }
+    fields[9].data = { value = settings.showServos or 1, min = 0, max = 1, table = hideShow }
+    fields[10].data = { value = settings.showMixer or 1, min = 0, max = 1, table = hideShow }
+    fields[11].data = { value = settings.showMixerInputs or 0, min = 0, max = 1, table = hideShow }
+    fields[12].data = { value = settings.showMixerRules or 0, min = 0, max = 1, table = hideShow }
+    fields[13].data = { value = settings.showGyroFilters or 1, min = 0, max = 1, table = hideShow }
+    fields[14].data = { value = settings.showAccelerometerTrim or 1, min = 0, max = 1, table = hideShow }
+    fields[15].data = { value = settings.showModelOnTx or 0, min = 0, max = 1, table = hideShow }
+    fields[16].data = { value = settings.showExperimental or 0, min = 0, max = 1, table = hideShow }
+    fields[17].data = { value = settings.showAm32 or 0, min = 0, max = 1, table = hideShow }
+    fields[18].data = { value = settings.showBlheliS or 0, min = 0, max = 1, table = hideShow }
+    fields[19].data = { value = settings.showBluejay or 0, min = 0, max = 1, table = hideShow }
+    fields[20].data = { value = settings.showFlyRotor or 0, min = 0, max = 1, table = hideShow }
+    fields[21].data = { value = settings.showPlatinumV5 or 0, min = 0, max = 1, table = hideShow }
+    fields[22].data = { value = settings.showTribunus or 0, min = 0, max = 1, table = hideShow }
+    fields[23].data = { value = settings.showXdfly or 0, min = 0, max = 1, table = hideShow }
+    fields[24].data = { value = settings.showYge or 0, min = 0, max = 1, table = hideShow }
+    fields[25].data = { value = settings.showEscSensor or 1, min = 0, max = 1, table = hideShow }
+    fields[26].data = { value = settings.useAdjustmentTeller or 0, min = 0, max = 1, table = offOn }
     if canUseLvgl then
-        fields[26].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
+        fields[27].data = { value = settings.useLvgl or 1, min = 0, max = 1, table = offOn }
     end
 end
 
@@ -101,30 +103,31 @@ return {
         settings.showPidGains = fields[4].data.value
         settings.showPidController = fields[5].data.value
         settings.showProfileVarious = fields[6].data.value
-        settings.showBattery = fields[7].data.value
-        settings.showServos = fields[8].data.value
-        settings.showMixer = fields[9].data.value
-        settings.showMixerInputs = fields[10].data.value
-        settings.showMixerRules = fields[11].data.value
-        settings.showGyroFilters = fields[12].data.value
-        settings.showAccelerometerTrim = fields[13].data.value
-        settings.showModelOnTx = fields[14].data.value
-        settings.showExperimental = fields[15].data.value
-        settings.showAm32 = fields[16].data.value
-        settings.showBlheliS = fields[17].data.value
-        settings.showBluejay = fields[18].data.value
-        settings.showFlyRotor = fields[19].data.value
-        settings.showPlatinumV5 = fields[20].data.value
-        settings.showTribunus = fields[21].data.value
-        settings.showXdfly = fields[22].data.value
-        settings.showYge = fields[23].data.value
-        settings.showEscSensor = fields[24].data.value
-        if settings.useAdjustmentTeller ~= fields[25].data.value then
-            settings.useAdjustmentTeller = fields[25].data.value
+        settings.showTuneAdvisor = fields[7].data.value
+        settings.showBattery = fields[8].data.value
+        settings.showServos = fields[9].data.value
+        settings.showMixer = fields[10].data.value
+        settings.showMixerInputs = fields[11].data.value
+        settings.showMixerRules = fields[12].data.value
+        settings.showGyroFilters = fields[13].data.value
+        settings.showAccelerometerTrim = fields[14].data.value
+        settings.showModelOnTx = fields[15].data.value
+        settings.showExperimental = fields[16].data.value
+        settings.showAm32 = fields[17].data.value
+        settings.showBlheliS = fields[18].data.value
+        settings.showBluejay = fields[19].data.value
+        settings.showFlyRotor = fields[20].data.value
+        settings.showPlatinumV5 = fields[21].data.value
+        settings.showTribunus = fields[22].data.value
+        settings.showXdfly = fields[23].data.value
+        settings.showYge = fields[24].data.value
+        settings.showEscSensor = fields[25].data.value
+        if settings.useAdjustmentTeller ~= fields[26].data.value then
+            settings.useAdjustmentTeller = fields[26].data.value
             wf.executeScript("F/pilotConfigReset")() -- restart wfbg
         end
         if canUseLvgl then
-            settings.useLvgl = fields[26].data.value
+            settings.useLvgl = fields[27].data.value
         end
         wf.saveSettings(settings)
         wf.reloadMainMenu(true)

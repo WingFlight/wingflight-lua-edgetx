@@ -1,3 +1,10 @@
+# 0.0.32
+
+Require MSP API 22.13 (0.0.32 firmware). The firmware update resets every PID, thrust-vector and rate profile to defaults, so note your tune and rates before flashing.
+Add a Tune Advisor page: per axis it shows how the model follows the sticks and its bounce-back after a stop, and up to three suggested changes named by page and setting, with the reason. Clear data resets the statistics. Older firmware shows "Needs newer firmware". Shown by default; hide it in Settings.
+Add Prop-Hang Relax (strength, angle, fade-out) to Profile - Various.
+Limit master gain to 0-200% (was 25-1000%). 0% turns the stabilizer off on that axis.
+
 # 0.0.30
 
 Require MSP API 22.13 (0.0.30 firmware). The firmware update resets every PID and thrust-vector profile to defaults, so note your tune before flashing.

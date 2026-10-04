@@ -33,7 +33,7 @@ local FF_MIN_CORR = 0.85
 local FF_HOT = 1.15
 local FF_LOW = 0.85
 local FF_STEP_MAX = 0.2             -- change FF by at most 20% per step
-local F_MAX = 1000
+local GAIN_MAX = 1000
 local RC_RATE_MAX = 200
 local RC_RATE_DPS = 5               -- the Rates page shows Rate as raw x 5 deg/s
 -- Throttle fact
@@ -56,10 +56,15 @@ local function clamp(v, lo, hi) return math.max(lo, math.min(hi, v)) end
 local function ffJudged(a) return a.ffCount >= FF_MIN_COUNT and a.ffCorr >= FF_MIN_CORR end
 local function ffOff(a) return ffJudged(a) and (a.ffGain > FF_HOT or a.ffGain < FF_LOW) end
 
--- Returns response, stops, actions, whys for one axis (0 roll, 1 pitch, 2 yaw)
+-- Returns response, stops, actions, whys for one axis (0 roll, 1 pitch, 2 yaw).
+-- A change and its reason go in together or not at all, so a reason never shows for a
+-- change that was left out: a later change first checks room(). The first change
+-- (fly more, FF with Rate, or full-stick Rate) always fits. The reasons for changes
+-- stay within three; only the closing throttle fact can be cut.
 local function advise(a, axis)
     local name = axisNames[axis]
     local actions, whys = {}, {}
+    local function room(n) return #actions + n <= 3 end
     local function act(s) if #actions < 3 then actions[#actions + 1] = s end end
     local function why(s) if #whys < 3 then whys[#whys + 1] = s end end
 
@@ -77,7 +82,7 @@ local function advise(a, axis)
         local g = a.ffGain
         local hot = g > FF_HOT
         response = string.format(hot and "%d%% faster than asked" or "%d%% slower than asked", round(math.abs(g - 1) * 100))
-        local newF = clamp(round(a.F * clamp(1 / g, 1 - FF_STEP_MAX, 1 + FF_STEP_MAX)), 1, F_MAX)
+        local newF = clamp(round(a.F * clamp(1 / g, 1 - FF_STEP_MAX, 1 + FF_STEP_MAX)), 1, GAIN_MAX)
         -- Keep stick-to-surface the same: FF x rate is what the pilot feels
         local newRate = clamp(round(a.rcRate * a.F / newF), 1, RC_RATE_MAX)
         act(string.format("PID Gains > %s > FF: %d -> %d", name, a.F, newF))
@@ -101,13 +106,13 @@ local function advise(a, axis)
         local rebound = round(a.meanRebound * 100)
         stops = string.format("%d%% bounce-back", rebound)
         if a.meanRebound >= REBOUND_BAD then
-            if a.meanIterm >= ITERM_PUSH and a.relax < RELAX_MAX then
+            if a.meanIterm >= ITERM_PUSH and a.relax < RELAX_MAX and room(1) then
                 act(string.format("Profile - Various > I-term Relax > %s: %d -> %d", name, a.relax, a.relax + 1))
                 why("After a stop, the I-term pushes the model back.")
             elseif ffOff(a) then
                 why(string.format("Stops bounce back %d%%. Fix FF first, then check again.", rebound))
-            else
-                act(string.format("PID Gains > %s > P: %d -> %d", name, a.P, clamp(round(a.P * P_STEP), a.P + 1, F_MAX)))
+            elseif room(1) then
+                act(string.format("PID Gains > %s > P: %d -> %d", name, a.P, clamp(round(a.P * P_STEP), a.P + 1, GAIN_MAX)))
                 why(string.format("Stops bounce back %d%%. More P brakes them (or add B).", rebound))
             end
         end
@@ -142,15 +147,22 @@ local function textWidth(s)
     return #s * charW
 end
 
+-- A word too wide for a line of its own is cut into pieces that fit
 local function wrap(text, maxW, out)
     local line = ""
     for word in string.gmatch(text, "%S+") do
         local candidate = (line == "") and word or (line .. " " .. word)
-        if line ~= "" and textWidth(candidate) > maxW then
-            out[#out + 1] = line
-            line = word
-        else
+        if textWidth(candidate) <= maxW then
             line = candidate
+        else
+            if line ~= "" then out[#out + 1] = line end
+            while #word > 1 and textWidth(word) > maxW do
+                local n = #word - 1
+                while n > 1 and textWidth(string.sub(word, 1, n)) > maxW do n = n - 1 end
+                out[#out + 1] = string.sub(word, 1, n)
+                word = string.sub(word, n + 1)
+            end
+            line = word
         end
     end
     if line ~= "" then out[#out + 1] = line end
@@ -227,7 +239,7 @@ page = {
     readOnly    = true,
 
     timer = function(self)
-        if wf.mspQueue:isProcessed() and wf.clock() - lastPoll >= POLL_INTERVAL then
+        if not unsupported and wf.mspQueue:isProcessed() and wf.clock() - lastPoll >= POLL_INTERVAL then
             requestAxis()
         end
     end,
@@ -249,6 +261,8 @@ page = {
         wf.lcdNeedsInvalidate = true
     end,
 
+    -- The queue retries without limit, so an error here is the FC's MSP error reply:
+    -- firmware without the command. Say so once and stop polling; changing Axis asks again.
     onError = function(self)
         if unsupported then return end
         unsupported = true
@@ -262,7 +276,7 @@ page = {
         mspTuneAdvisor.clear(function()
             lastSignature = nil
             requestAxis()
-        end)
+        end, page, page.onError)
     end,
 }
 

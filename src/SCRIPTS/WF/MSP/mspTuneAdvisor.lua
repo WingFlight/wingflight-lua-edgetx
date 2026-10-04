@@ -64,12 +64,15 @@ local function getAxis(axis, callback, callbackParam, errorCallback)
     wf.mspQueue:add(message)
 end
 
-local function clear(callback, callbackParam)
+local function clear(callback, callbackParam, errorCallback)
     local message = {
         command = 0x5F19,
         payload = {},
         processReply = function(self, buf)
             if callback then callback(callbackParam) end
+        end,
+        errorHandler = function(self)
+            if errorCallback then errorCallback(callbackParam) end
         end,
         simulatorResponse = {},
     }

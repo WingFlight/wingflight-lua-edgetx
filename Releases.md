@@ -1,3 +1,7 @@
+# 0.0.33
+
+Require MSP API 22.14 (0.0.33 firmware). Flashing keeps your settings.
+
 # 0.0.32
 
 Require MSP API 22.13 (0.0.32 firmware). The firmware update resets every PID, thrust-vector and rate profile to defaults, so note your tune and rates before flashing.

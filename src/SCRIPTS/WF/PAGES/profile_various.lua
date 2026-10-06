@@ -105,13 +105,6 @@ local function buildProfileFields()
         fields[#fields + 1] = { t = "Fade-out",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.prop_hang_fade }
     end
 
-    if pidProfile.has_roll_yaw then
-        -- Yaw the airframe makes by itself in a roll (% of roll rate), which the yaw loop leaves alone
-        incY(lineSpacing * 0.25)
-        labels[#labels + 1] = { t = "Roll-Yaw",            x = x,          y = incY(lineSpacing) }
-        fields[#fields + 1] = { t = "Coupling",            x = x + indent, y = incY(lineSpacing), sp = x + sp, data = pidProfile.roll_yaw_coupling }
-    end
-
 end
 
 local function receivedPidProfile(page, _)

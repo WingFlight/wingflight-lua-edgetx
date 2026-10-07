@@ -1,3 +1,7 @@
+# 0.0.34
+
+Version bump for release alignment; no EdgeTX Lua-relevant changes this cycle.
+
 # 0.0.33
 
 Require MSP API 22.14 (0.0.33 firmware). Flashing keeps your settings.

@@ -1,8 +1,24 @@
+-- MSP_SERVO_CONFIGURATIONS lists the configured PWM servos, then all 24 bus servos
+-- when bus servos are configured. MSP_SET_SERVO_OVERRIDE takes the firmware's own
+-- servo index instead, where bus servos start at 8 (BUS_SERVO_OFFSET).
+local BUS_SERVO_OFFSET = 8
+local BUS_SERVO_CHANNELS = 24
+local listedServoCount = 0
+
+local function overrideIndex(servoIndex)
+    local pwmCount = listedServoCount - BUS_SERVO_CHANNELS
+    if pwmCount >= 0 and servoIndex >= pwmCount then
+        return BUS_SERVO_OFFSET + servoIndex - pwmCount
+    end
+    return servoIndex
+end
+
 local function getServoConfigurations(callback, callbackParam)
     local message = {
         command = 120, -- MSP_SERVO_CONFIGURATIONS
         processReply = function(self, buf)
             local servoCount = wf.mspHelper.readU8(buf)
+            listedServoCount = servoCount
             --wf.print("Servo count "..tostring(servoCount))
             local configs = {}
             for i = 0, servoCount-1 do
@@ -48,7 +64,7 @@ end
 local function disableServoOverride(servoIndex)
     local message = {
         command = 193, -- MSP_SET_SERVO_OVERRIDE
-        payload = { servoIndex }
+        payload = { overrideIndex(servoIndex) }
     }
     wf.mspHelper.writeU16(message.payload, 2001)
     wf.mspQueue:add(message)
@@ -57,7 +73,7 @@ end
 local function enableServoOverride(servoIndex)
     local message = {
         command = 193, -- MSP_SET_SERVO_OVERRIDE
-        payload = { servoIndex }
+        payload = { overrideIndex(servoIndex) }
     }
     wf.mspHelper.writeU16(message.payload, 0)
     wf.mspQueue:add(message)

@@ -1,7 +1,8 @@
 -- WingFlight's mixer is a generic rule-based system (MSP_MIXER_INPUTS/MSP_MIXER_RULES/
 -- MSP_MIXER_CURVES below), not Rotorflight's helicopter swashplate mixer.
 
-local MIXER_INPUT_COUNT = 30 -- MIXER_IN_COUNT (pg/mixer.h): NONE + 26 stabilized/RC-command/RC-channel inputs + 3 thrust-vector inputs
+local MIXER_INPUT_COUNT = 36 -- MIXER_IN_COUNT (pg/mixer.h): NONE + 26 stabilized/RC-command/RC-channel inputs + 3 thrust-vector inputs + RC channels 19-24
+local MIXER_OUTPUT_COUNT = 37 -- MIXER_OUTPUT_COUNT (flight/mixer.h): NONE + 26 servos + 4 motors + servos 27-32
 local MIXER_RULE_COUNT = 32
 local MIXER_CURVE_COUNT = 8
 local MIXER_CURVE_POINTS = 9
@@ -86,7 +87,7 @@ local function getMixerRules(callback, callbackParam)
                 rules[i] = {
                     oper = { value = wf.mspHelper.readU8(buf), min = 0, max = 3, table = { [0] = "None", "Set", "Add", "Mul" } },
                     input = { value = wf.mspHelper.readU8(buf), min = 0, max = MIXER_INPUT_COUNT - 1 },
-                    output = { value = wf.mspHelper.readU8(buf), min = 0, max = 30 },
+                    output = { value = wf.mspHelper.readU8(buf), min = 0, max = MIXER_OUTPUT_COUNT - 1 },
                     offset = { value = wf.mspHelper.readS16(buf), min = -2500, max = 2500 },
                     weight = { value = wf.mspHelper.readS16(buf), min = -10000, max = 10000 },
                     weightNeg = { value = wf.mspHelper.readS16(buf), min = -10000, max = 10000 },

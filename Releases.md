@@ -1,3 +1,9 @@
+# 0.0.36
+
+Fix the servo override moving the wrong servo when bus servos are set up with fewer than 8 PWM servos.
+Offer mixer inputs for RC channels 19-24 and rule outputs up to servo 32, matching the firmware.
+Show the backup RX and arm switch arming flags correctly.
+
 # 0.0.35
 
 Version bump for release alignment; no EdgeTX Lua-relevant changes this cycle.

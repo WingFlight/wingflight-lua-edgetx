@@ -1,3 +1,7 @@
+# 0.0.37
+
+Keep the AM32 30° timing advance: it showed as 22.5° and any save from the AM32 page lowered it. 30° is now one of the timing choices.
+
 # 0.0.36
 
 Fix the servo override moving the wrong servo when bus servos are set up with fewer than 8 PWM servos.

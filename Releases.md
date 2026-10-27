@@ -1,3 +1,7 @@
+# 0.0.38
+
+Version bump for release alignment; no EdgeTX Lua-relevant changes this cycle.
+
 # 0.0.37
 
 Keep the AM32 30° timing advance: it showed as 22.5° and any save from the AM32 page lowered it. 30° is now one of the timing choices.

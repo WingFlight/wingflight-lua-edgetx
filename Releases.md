@@ -1,3 +1,9 @@
+# 0.0.39
+
+Use with the 0.0.39 firmware.
+Switch MSP over telemetry to the compact framing (version 3): one frame fewer on most messages. Needs the 0.0.39 firmware or later; these scripts no longer work with older firmware.
+Read the packed Tune Advisor reply (payload version 2), and still read the older layout from firmware 0.0.32 to 0.0.38.
+
 # 0.0.38
 
 Version bump for release alignment; no EdgeTX Lua-relevant changes this cycle.

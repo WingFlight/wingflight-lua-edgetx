@@ -104,6 +104,12 @@ local function mspReceivedReply(payload)
         mspRxReq = cmd1 + bit32.lshift(cmd2, 8)
         mspRxSize = len
         mspStarted = (mspRxReq == mspLastReq)
+        if not mspStarted then
+            -- a late reply to an earlier command: not ours. Taking it as a
+            -- complete reply would clear mspLastReq, and the real reply's
+            -- start frame would then no longer match.
+            return nil
+        end
     elseif not mspStarted then
         return nil
     elseif bit32.band(mspRemoteSeq + 1, 0x0F) ~= seq then

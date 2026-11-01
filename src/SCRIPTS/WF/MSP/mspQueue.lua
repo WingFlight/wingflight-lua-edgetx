@@ -2,7 +2,7 @@
 local MspQueueController = {}
 MspQueueController.__index = MspQueueController
 
-local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs = wf.executeScript("MSP/common")
+local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs, setFraming, framingFallbackCount = wf.executeScript("MSP/common")
 
 function MspQueueController.new()
     local self = setmetatable({}, MspQueueController)
@@ -11,7 +11,18 @@ function MspQueueController.new()
     self.lastTimeCommandSent = nil
     self.retryCount = 0
     self.maxRetries = -1 -- retry indefinitely
+    self.framingFallbacks = framingFallbackCount()
     return self
+end
+
+-- Called by background_init.lua once MSP_API_VERSION has answered, and with
+-- nil on a reset. Version 3 of the framing (MSP/common.lua) is offered from
+-- API 22.15. Snapshot 0.0.38 already reports 22.15 without having it
+-- (wingflight-firmware #251 came in 0.0.39); it refuses version 3 once, and
+-- the link falls back to version 2.
+function MspQueueController:setFirmwareApi(major, minor)
+    local v3 = major ~= nil and minor ~= nil and (major > 22 or (major == 22 and minor >= 15))
+    setFraming(v3 and 3 or 2)
 end
 
 function MspQueueController:isProcessed()
@@ -81,6 +92,16 @@ function MspQueueController:processQueue()
 
         mspProcessTxQ()
         cmd, buf, err = mspPollReply()
+
+        -- The firmware refused framing version 3 and the link is back on
+        -- version 2: send the request again at once, and do not count the
+        -- refused attempt.
+        local fallbacks = framingFallbackCount()
+        if fallbacks ~= self.framingFallbacks then
+            self.framingFallbacks = fallbacks
+            self.lastTimeCommandSent = nil
+            if self.retryCount > 0 then self.retryCount = self.retryCount - 1 end
+        end
     --[NIR
     else
         --wf.print("Sending  cmd "..self.currentMessage.command..": {" .. joinTableItems(self.currentMessage.payload, ", ") .. "}")

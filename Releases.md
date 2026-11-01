@@ -1,3 +1,10 @@
+# 0.0.40
+
+Use with the 0.0.40 firmware (MSP API 22.15); the 0.0.38 and 0.0.39 firmware work too.
+Fix the scripts refusing the 0.0.38 and 0.0.39 firmware as unsupported: they asked for MSP API 22.14.
+Start every link in the standard MSP framing and switch to the compact framing only when the firmware has it, so 0.0.38 boards work again.
+Fix a page waiting out its retry when a late reply to an earlier request arrives.
+
 # 0.0.39
 
 Use with the 0.0.39 firmware.

@@ -1,12 +1,19 @@
--- Usage: local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs = wf.executeScript("MSP/common")
+-- Usage: local mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs,
+--              setFraming, framingFallbackCount = wf.executeScript("MSP/common")
 --
--- Compact framing (version 3 in the status byte, telemetry/msp_shared.c in
--- wingflight-firmware): an MSPv2 command with a 3-byte header
---   CMD_LOW CMD_HIGH LEN
--- and, when LEN is 0xFF, LEN_LOW LEN_HIGH after it. No flags byte and no CRC
--- (the telemetry frame has its own). The first S.Port frame then carries two
--- payload bytes instead of a header alone, one frame fewer on most messages.
--- The firmware answers in the framing it was asked in.
+-- Two framings of an MSPv2 command, chosen per link (setFraming()):
+--   version 2  FLAGS CMD_LOW CMD_HIGH LEN_LOW LEN_HIGH
+--   version 3  CMD_LOW CMD_HIGH LEN, and when LEN is 0xFF, LEN_LOW LEN_HIGH
+--              after it (wingflight-firmware telemetry/msp_shared.c)
+-- No CRC: the telemetry frame has its own. Version 3 leaves two payload bytes
+-- in a 6-byte S.Port start frame that version 2 fills with header alone.
+--
+-- Every link starts in version 2, so MSP_API_VERSION reads on any firmware.
+-- MSP/mspQueue.lua's setFirmwareApi() offers version 3 from the API version
+-- that has it. A firmware without it answers a version-3 request with a start
+-- frame that has the error bit set and command 0; that drops the link back to
+-- version 2 (see mspReceivedReply()). A reply is parsed by the version bits of
+-- its own start frame. Kept in step with the Ethos suite's tasks/msp/common.lua.
 
 local mspSeq = 0 -- Sequence number for next MSP packet
 local mspRemoteSeq = 0
@@ -18,12 +25,21 @@ local mspStarted = false
 local mspLastReq = 0
 local mspTxBuf = {}
 local mspTxIdx = 1
+-- The framing new requests are built in, and the one the request in flight
+-- was built in: a fallback mid-request must not relabel its remaining frames.
+local mspFraming = 2
+local mspTxFraming = 2
+-- Times the link fell back from version 3 to 2, ever.
+local mspFramingFallbacks = 0
 
-local MSP_VERSION_BITS = bit32.lshift(3, 5)
 local MSP_STARTFLAG = bit32.lshift(1, 4)
 
 local protocolScript = "MSP/" .. wf.executeScript("protocols")
 local mspSend, mspPoll, telemetryPush, maxTxBufferSize, maxRxBufferSize = wf.executeScript(protocolScript)
+
+local function setFraming(version)
+    mspFraming = (version == 3) and 3 or 2
+end
 
 local function mspProcessTxQ()
     if #mspTxBuf == 0 then
@@ -33,7 +49,7 @@ local function mspProcessTxQ()
         return true
     end
     local payload = {}
-    payload[1] = mspSeq + MSP_VERSION_BITS
+    payload[1] = mspSeq + bit32.lshift(mspTxFraming, 5)
     mspSeq = bit32.band(mspSeq + 1, 0x0F)
     if mspTxIdx == 1 then
         payload[1] = payload[1] + MSP_STARTFLAG
@@ -62,15 +78,20 @@ local function mspSendRequest(cmd, payload)
     if #mspTxBuf ~= 0 or not cmd then
         return nil
     end
-    mspTxBuf[1] = bit32.band(cmd, 0xFF)
-    mspTxBuf[2] = bit32.band(bit32.rshift(cmd, 8), 0xFF)
-    if #payload < 255 then
-        mspTxBuf[3] = #payload
+    local cmd1 = bit32.band(cmd, 0xFF)
+    local cmd2 = bit32.band(bit32.rshift(cmd, 8), 0xFF)
+    local len1 = bit32.band(#payload, 0xFF)
+    local len2 = bit32.band(bit32.rshift(#payload, 8), 0xFF)
+    if mspFraming == 3 then
+        if #payload < 255 then
+            mspTxBuf = { cmd1, cmd2, #payload }
+        else
+            mspTxBuf = { cmd1, cmd2, 0xFF, len1, len2 }
+        end
     else
-        mspTxBuf[3] = 0xFF
-        mspTxBuf[4] = bit32.band(#payload, 0xFF)
-        mspTxBuf[5] = bit32.band(bit32.rshift(#payload, 8), 0xFF)
+        mspTxBuf = { 0, cmd1, cmd2, len1, len2 }
     end
+    mspTxFraming = mspFraming
     for i = 1, #payload do
         mspTxBuf[#mspTxBuf + 1] = bit32.band(payload[i], 0xFF)
     end
@@ -93,16 +114,41 @@ local function mspReceivedReply(payload)
     if start then
         mspRxBuf = {}
         mspRxError = bit32.btest(status, 0x80)
-        local cmd1 = payload[idx] or 0
-        local cmd2 = payload[idx + 1] or 0
-        local len = payload[idx + 2] or 0
-        idx = idx + 3
-        if len == 0xFF then
-            len = (payload[idx] or 0) + bit32.lshift(payload[idx + 1] or 0, 8)
-            idx = idx + 2
+        local version = bit32.band(bit32.rshift(status, 5), 0x03)
+        if version == 3 then
+            local cmd1 = payload[idx] or 0
+            local cmd2 = payload[idx + 1] or 0
+            local len = payload[idx + 2] or 0
+            idx = idx + 3
+            if len == 0xFF then
+                len = (payload[idx] or 0) + bit32.lshift(payload[idx + 1] or 0, 8)
+                idx = idx + 2
+            end
+            mspRxReq = cmd1 + bit32.lshift(cmd2, 8)
+            mspRxSize = len
+        elseif version == 2 then
+            idx = idx + 1 -- flags
+            mspRxReq = (payload[idx] or 0) + bit32.lshift(payload[idx + 1] or 0, 8)
+            mspRxSize = (payload[idx + 2] or 0) + bit32.lshift(payload[idx + 3] or 0, 8)
+            idx = idx + 4
+        else
+            mspStarted = false
+            return nil
         end
-        mspRxReq = cmd1 + bit32.lshift(cmd2, 8)
-        mspRxSize = len
+        -- A firmware without version 3 refuses it: it answers in the request's
+        -- version bits, with the error bit, and lays out command 0 as MSPv2,
+        -- which reads here as command 0 and length 0. No firmware that has
+        -- version 3 sends command 0. Fall back to version 2 for this link and
+        -- hand the request back, so the queue resends it at once. Only once:
+        -- refusals of the request's other frames find the link on version 2.
+        if mspRxError and mspRxReq == 0 and mspTxFraming == 3 and mspFraming == 3 then
+            mspFraming = 2
+            mspFramingFallbacks = mspFramingFallbacks + 1
+            mspTxBuf = {}
+            mspTxIdx = 1
+            mspStarted = false
+            return nil
+        end
         mspStarted = (mspRxReq == mspLastReq)
         if not mspStarted then
             -- a late reply to an earlier command: not ours. Taking it as a
@@ -150,4 +196,8 @@ local function mspClearRxTxBufs()
     while mspPoll() do end
 end
 
-return mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs
+local function framingFallbackCount()
+    return mspFramingFallbacks
+end
+
+return mspSendRequest, mspProcessTxQ, mspPollReply, mspClearRxTxBufs, setFraming, framingFallbackCount

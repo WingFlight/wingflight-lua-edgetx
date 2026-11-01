@@ -132,6 +132,7 @@ local function initializeQueue()
         function(_, version, major, minor)
             wf.apiVersion = version
             apiVersionSupported = mspApiVersion.isSupported(major, minor)
+            wf.mspQueue:setFirmwareApi(major, minor)
             if not apiVersionSupported then
                 return
             end
@@ -209,6 +210,7 @@ end
 
 local function reset()
     wf.mspQueue:clear()
+    wf.mspQueue:setFirmwareApi(nil, nil)
     wf.apiVersion = nil
     apiVersionSupported = false
 end

@@ -52,6 +52,7 @@ local scripts = {
     "/SCRIPTS/WF/MSP/mspEscHwPl5.lua",
     "/SCRIPTS/WF/MSP/mspEscScorp.lua",
     "/SCRIPTS/WF/MSP/mspEscSensorConfig.lua",
+    "/SCRIPTS/WF/MSP/mspSrxl2EscConfig.lua",
     "/SCRIPTS/WF/MSP/mspEscXdfly.lua",
     "/SCRIPTS/WF/MSP/mspEscYge.lua",
     "/SCRIPTS/WF/MSP/mspExperimental.lua",

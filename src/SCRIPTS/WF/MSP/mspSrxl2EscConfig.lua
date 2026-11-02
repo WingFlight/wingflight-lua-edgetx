@@ -25,6 +25,12 @@ local function getSrxl2EscConfig(callback, callbackParam, data, errorCallback)
     local message = {
         command = 0x5F35, -- MSP2_WING_SRXL2_ESC_CONFIG
         processReply = function(self, buf)
+            -- Payload version 1 is exactly 5 bytes; anything else is a layout
+            -- this script does not know, so treat it like unsupported firmware.
+            if #buf ~= 5 or buf[1] ~= 1 then
+                if errorCallback then errorCallback(callbackParam) end
+                return
+            end
             wf.mspHelper.readU8(buf) -- payload version 1
             data.throttle_rate_hz.value = wf.mspHelper.readU16(buf)
             data.telem_interval_frames.value = wf.mspHelper.readU8(buf)
@@ -39,6 +45,8 @@ local function getSrxl2EscConfig(callback, callbackParam, data, errorCallback)
     wf.mspQueue:add(message)
 end
 
+-- Exactly 4 bytes (U16 throttle rate, U8 telemetry interval, U8 motor 2
+-- channel); the firmware rejects any other length.
 local function setSrxl2EscConfig(config)
     local message = {
         command = 0x5F36, -- MSP2_WING_SET_SRXL2_ESC_CONFIG

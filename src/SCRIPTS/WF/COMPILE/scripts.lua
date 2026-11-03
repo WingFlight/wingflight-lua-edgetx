@@ -70,6 +70,7 @@ local scripts = {
     "/SCRIPTS/WF/MSP/mspSetProfile.lua",
     "/SCRIPTS/WF/MSP/mspSetRtc.lua",
     "/SCRIPTS/WF/MSP/mspSmartFuel.lua",
+    "/SCRIPTS/WF/MSP/mspSrxl2EscConfig.lua",
     "/SCRIPTS/WF/MSP/mspStatus.lua",
     "/SCRIPTS/WF/MSP/mspTuneAdvisor.lua",
     "/SCRIPTS/WF/MSP/mspTelemetryConfig.lua",

@@ -39,9 +39,19 @@ local srxl2Supported = nil
 -- cannot overwrite edits made after the page loaded.
 local srxl2Reading = false
 incY(lineSpacing * 0.5)
+-- Channel 1 is motor 1, so the motor 2 channel steps from Off straight to 2
+-- and back. motor2Last is the value before the edit, which gives the direction.
+local motor2Last = 0
+local function skipMotor1Channel(field)
+    local data = field.data
+    if data.value == 1 then
+        data.value = motor2Last >= 2 and 0 or 2
+    end
+    motor2Last = data.value
+end
 labels[#labels + 1] = { t = "SRXL2 ESC",                x = x, y = incY(lineSpacing) }
 fields[#fields + 1] = { t = "Telemetry Interval",       x = x, y = incY(lineSpacing), sp = x + sp, data = srxl2Config.telem_interval_frames }
-fields[#fields + 1] = { t = "Motor 2 Channel",          x = x, y = incY(lineSpacing), sp = x + sp, data = srxl2Config.motor2_channel }
+fields[#fields + 1] = { t = "Motor 2 Channel",          x = x, y = incY(lineSpacing), sp = x + sp, data = srxl2Config.motor2_channel, change = skipMotor1Channel }
 
 local function srxl2Unsupported(page)
     srxl2Reading = false
@@ -57,6 +67,7 @@ end
 local function receivedSrxl2Config(page, _)
     srxl2Reading = false
     srxl2Supported = true
+    motor2Last = srxl2Config.motor2_channel.value or 0
     wf.onPageReady(page)
 end
 

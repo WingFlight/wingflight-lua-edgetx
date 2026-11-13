@@ -2,41 +2,62 @@
 -- MSP_MIXER_CURVES below), not Rotorflight's helicopter swashplate mixer.
 
 local MIXER_INPUT_COUNT = 36 -- MIXER_IN_COUNT (pg/mixer.h): NONE + 26 stabilized/RC-command/RC-channel inputs + 3 thrust-vector inputs + RC channels 19-24
-local MIXER_OUTPUT_COUNT = 37 -- MIXER_OUTPUT_COUNT (flight/mixer.h): NONE + 26 servos + 4 motors + servos 27-32
+local MIXER_OUTPUT_COUNT = 31 -- MIXER_OUTPUT_COUNT (flight/mixer.h): NONE + servos 1-24 + 2 reserved + 4 motors
 local MIXER_RULE_COUNT = 32
 local MIXER_CURVE_COUNT = 8
 local MIXER_CURVE_POINTS = 9
+
+-- Mixer rule outputs: 1-24 are the servos, 25 and 26 are reserved and 27-30 are the motors.
+local MIXER_OUTPUT_RESERVED_FIRST = 25
+local MIXER_OUTPUT_RESERVED_LAST = 26
+local outputNames = { [0] = "None" }
+for i = 1, 24 do outputNames[i] = "Servo " .. i end
+for i = 1, 4 do outputNames[26 + i] = "Motor " .. i end
 
 local function getDefaults()
     local defaults = {}
     defaults.model_type = { min = 0, max = 5, table = {
         [0] = "Regular Airplane", "Flying Wing", "V-Tail Airplane", "Delta Wing", "Rudder/Elevator Trainer", "Custom"
     } }
-    defaults.clone_from_pwm = { value = 1, min = 0, max = 1 }
     return defaults
 end
 
+-- MSP_MIXER_CONFIG: U8 model_type, U8 reserved, U8 SBUS output channels, U8 F.Bus output
+-- channels, U8 channels the configured bus output drives, U16 servo_pwm_rate (API 22.16).
 local function getMixerConfig(callback, callbackParam, data)
     data = data or getDefaults()
     local message = {
         command = 42, -- MSP_MIXER_CONFIG
         processReply = function(self, buf)
             data.model_type.value = wf.mspHelper.readU8(buf)
-            data.clone_from_pwm.value = #buf >= 2 and wf.mspHelper.readU8(buf) or 1
+            if #buf >= 7 then
+                wf.mspHelper.readU8(buf) -- reserved
+                data.sbus_out_channels = wf.mspHelper.readU8(buf)
+                data.fbus_master_channels = wf.mspHelper.readU8(buf)
+                wf.mspHelper.readU8(buf) -- channels the configured bus output drives
+                data.servo_pwm_rate = wf.mspHelper.readU16(buf)
+            end
             callback(callbackParam, data)
         end,
-        simulatorResponse = { 0, 1 },
+        simulatorResponse = { 0, 0, 16, 16, 0, 50, 0 },
     }
     wf.mspQueue:add(message)
 end
 
+-- The PWM rate comes after the two bus channel counts, so they are sent back as read.
+-- Without them (the reply was not read in full) only the airframe is written.
 local function setMixerConfig(data)
     local message = {
         command = 43, -- MSP_SET_MIXER_CONFIG
         payload = {}
     }
     wf.mspHelper.writeU8(message.payload, data.model_type.value)
-    wf.mspHelper.writeU8(message.payload, data.clone_from_pwm.value or 0)
+    wf.mspHelper.writeU8(message.payload, 0) -- reserved
+    if data.servo_pwm_rate then
+        wf.mspHelper.writeU8(message.payload, data.sbus_out_channels)
+        wf.mspHelper.writeU8(message.payload, data.fbus_master_channels)
+        wf.mspHelper.writeU16(message.payload, data.servo_pwm_rate)
+    end
     wf.mspQueue:add(message)
 end
 
@@ -87,7 +108,7 @@ local function getMixerRules(callback, callbackParam)
                 rules[i] = {
                     oper = { value = wf.mspHelper.readU8(buf), min = 0, max = 3, table = { [0] = "None", "Set", "Add", "Mul" } },
                     input = { value = wf.mspHelper.readU8(buf), min = 0, max = MIXER_INPUT_COUNT - 1 },
-                    output = { value = wf.mspHelper.readU8(buf), min = 0, max = MIXER_OUTPUT_COUNT - 1 },
+                    output = { value = wf.mspHelper.readU8(buf), min = 0, max = MIXER_OUTPUT_COUNT - 1, table = outputNames },
                     offset = { value = wf.mspHelper.readS16(buf), min = -2500, max = 2500 },
                     weight = { value = wf.mspHelper.readS16(buf), min = -10000, max = 10000 },
                     weightNeg = { value = wf.mspHelper.readS16(buf), min = -10000, max = 10000 },
@@ -195,6 +216,8 @@ return {
     disableOverride = disableMixerOverride,
     enableOverride = enableMixerOverride,
     MIXER_INPUT_COUNT = MIXER_INPUT_COUNT,
+    MIXER_OUTPUT_RESERVED_FIRST = MIXER_OUTPUT_RESERVED_FIRST,
+    MIXER_OUTPUT_RESERVED_LAST = MIXER_OUTPUT_RESERVED_LAST,
     MIXER_RULE_COUNT = MIXER_RULE_COUNT,
     MIXER_CURVE_COUNT = MIXER_CURVE_COUNT,
     MIXER_CURVE_POINTS = MIXER_CURVE_POINTS,

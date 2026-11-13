@@ -17,14 +17,15 @@ local updateSelectedServoConfiguration = false
 local overrideAllServos = false
 
 local  function setValues(servoIndex)
+    local config = servoConfigs[servoIndex]
+    if not config then return end
     fields[1].data.value = servoIndex
-    fields[2].data = servoConfigs[servoIndex].mid
-    fields[3].data = servoConfigs[servoIndex].min
-    fields[4].data = servoConfigs[servoIndex].max
-    fields[5].data = servoConfigs[servoIndex].scaleNeg
-    fields[6].data = servoConfigs[servoIndex].scalePos
-    fields[7].data = servoConfigs[servoIndex].rate
-    fields[8].data = servoConfigs[servoIndex].speed
+    fields[2].data = config.mid
+    fields[3].data = config.min
+    fields[4].data = config.max
+    fields[5].data = config.scaleNeg
+    fields[6].data = config.scalePos
+    fields[7].data = config.speed
 end
 
 -- Field event functions
@@ -71,25 +72,28 @@ local function onClickOverride(field, page)
     end
 end
 
--- Servo output index is a generic 0-based slot (PWM servos followed by bus servos, if
--- configured) -- which function each one performs is assigned via the mixer rules, not a
--- fixed per-index meaning, so this just labels slots numerically (1-based for display).
+-- Index N is servo N+1, on a PWM output, a bus channel or both -- which function each one
+-- performs is assigned via the mixer rules, not a fixed per-index meaning, so this just
+-- labels the servos numerically (1-based for display).
 local servoIndexLabels = { [0] = "1" }
-for i = 1, 25 do servoIndexLabels[i] = tostring(i + 1) end
-fields[1] = { t = "Servo",      x = x,          y = incY(lineSpacing), sp = x + sp, data = { min = 0, max = 25, table = servoIndexLabels }, postEdit = onChangeServo }
+for i = 1, 23 do servoIndexLabels[i] = tostring(i + 1) end
+fields[1] = { t = "Servo",      x = x,          y = incY(lineSpacing), sp = x + sp, data = { min = 0, max = 23, table = servoIndexLabels }, postEdit = onChangeServo }
 fields[2] = { t = "Center",     x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMid", preEdit = onPreEditCenter, change = onChangeCenter, postEdit = onPostEditCenter }
 fields[3] = { t = "Min",        x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMin" }
 fields[4] = { t = "Max",        x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMax" }
 fields[5] = { t = "Scale neg",  x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoScaleNeg" }
 fields[6] = { t = "Scale pos",  x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoScalePos" }
-fields[7] = { t = "Rate",       x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoRate" }
-fields[8] = { t = "Speed",      x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoSpeed" }
+fields[7] = { t = "Speed",      x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoSpeed" }
 incY(lineSpacing * 0.5)
-fields[9] = { t = "[Override All Servos]", x = x + indent * 2, y = incY(lineSpacing), preEdit = onClickOverride }
+fields[8] = { t = "[Override All Servos]", x = x + indent * 2, y = incY(lineSpacing), preEdit = onClickOverride }
+
+-- The PWM update rate (servo_pwm_rate) is not offered here: 50 Hz suits nearly every
+-- model, and the Configurator's Servos tab sets it for the rest.
 
 local function receivedServoConfigurations(page, configs)
     servoConfigs = configs
     selectedServoIndex = wf.lastChangedServo or 0
+    if selectedServoIndex > #configs then selectedServoIndex = 0 end
     setValues(selectedServoIndex)
     page.fields[1].data.max = #configs
     wf.onPageReady(page)

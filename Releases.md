@@ -1,3 +1,9 @@
+# 0.0.42
+
+Use with the 0.0.42 firmware (MSP API 22.16); the servo and mixer pages do not match older firmware.
+Rework the Servos page for the firmware's 24 servos: servo numbers are the same on PWM outputs and on the bus, the clone option and the per-servo rate are gone, and mixer rule outputs show as Servo 1 to 24 and Motor 1 to 4. The PWM rate is set in the Configurator.
+Change the SRXL2 motor 2 channel choices to Off and 2 to 32, following the firmware.
+
 # 0.0.41
 
 Use with the 0.0.41 firmware (MSP API 22.15); the 0.0.38 to 0.0.40 firmware work too.

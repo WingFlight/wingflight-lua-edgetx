@@ -47,6 +47,53 @@ local function setServoConfiguration(servoIndex, servoConfig)
     wf.mspQueue:add(message)
 end
 
+-- MSP2_WING_SERVO_NAMES (0x5F3A, firmware #286): a short name per servo, for
+-- reference only. Reply: U8 servo count (24), U8 name length N (8), then N
+-- zero-padded ASCII bytes per servo. callback(param, names) gets names[i] for
+-- servo i (0-based), "" for one without a name, or nil on firmware without
+-- names, which answers with an MSP error. Names are set in the Configurator,
+-- the Ethos suite or the CLI; these scripts only show them.
+local function getServoNames(callback, callbackParam)
+    local message = {
+        command = 0x5F3A, -- MSP2_WING_SERVO_NAMES
+        processReply = function(self, buf)
+            local count = wf.mspHelper.readU8(buf) or 0
+            local length = wf.mspHelper.readU8(buf) or 0
+            local names = {}
+            for servo = 0, count - 1 do
+                local name = ""
+                for _ = 1, length do
+                    local c = wf.mspHelper.readU8(buf) or 0
+                    if c ~= 0 then name = name .. string.char(c) end
+                end
+                names[servo] = name
+            end
+            callback(callbackParam, names)
+        end,
+        errorHandler = function(self)
+            callback(callbackParam, nil)
+        end,
+        -- 24 servos, 8 bytes each; the first two named like the default mix
+        simulatorResponse = {
+            24, 8,
+            76, 32, 65, 73, 76, 0, 0, 0, -- L AIL
+            82, 32, 65, 73, 76, 0, 0, 0, -- R AIL
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        }
+    }
+    wf.mspQueue:add(message)
+end
+
 local function disableServoOverride(servoIndex)
     local message = {
         command = 193, -- MSP_SET_SERVO_OVERRIDE
@@ -69,5 +116,6 @@ return {
     enableServoOverride = enableServoOverride,
     disableServoOverride = disableServoOverride,
     getServoConfigurations = getServoConfigurations,
+    getServoNames = getServoNames,
     setServoConfiguration = setServoConfiguration
 }

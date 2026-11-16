@@ -14,6 +14,21 @@ local outputNames = { [0] = "None" }
 for i = 1, 24 do outputNames[i] = "Servo " .. i end
 for i = 1, 4 do outputNames[26 + i] = "Motor " .. i end
 
+-- Servo outputs with their names (mspServos.getServoNames()): "Servo 1 (L AIL)".
+-- names may be nil (firmware without servo names). The rule fields share this table.
+-- Not on the 128 px wide screens: the value column has room for about 7 characters.
+local function setServoNames(names)
+    if LCD_W and LCD_W < 200 then return end
+    for i = 1, 24 do
+        local name = names and names[i - 1]
+        if name and name ~= "" then
+            outputNames[i] = "Servo " .. i .. " (" .. name .. ")"
+        else
+            outputNames[i] = "Servo " .. i
+        end
+    end
+end
+
 local function getDefaults()
     local defaults = {}
     defaults.model_type = { min = 0, max = 5, table = {
@@ -211,6 +226,7 @@ return {
     setMixerInput = setMixerInput,
     getMixerRules = getMixerRules,
     setMixerRule = setMixerRule,
+    setServoNames = setServoNames,
     getMixerCurves = getMixerCurves,
     setMixerCurve = setMixerCurve,
     disableOverride = disableMixerOverride,

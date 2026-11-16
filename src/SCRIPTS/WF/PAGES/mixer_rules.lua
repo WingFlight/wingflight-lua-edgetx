@@ -1,5 +1,6 @@
 local template = wf.executeScript(wf.radio.template)
 local mspMixer = wf.useApi("mspMixer")
+local mspServos = wf.useApi("mspServos")
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -76,9 +77,15 @@ local function receivedMixerRules(page, receivedRules)
     wf.onPageReady(page)
 end
 
+-- Servo outputs show the servo's name when it has one; then the rules are read.
+local function receivedServoNames(page, names)
+    mspMixer.setServoNames(names)
+    mspMixer.getMixerRules(receivedMixerRules, page)
+end
+
 return {
     read = function(self)
-        mspMixer.getMixerRules(receivedMixerRules, self)
+        mspServos.getServoNames(receivedServoNames, self)
     end,
     write = function(self)
         if rules[0] then

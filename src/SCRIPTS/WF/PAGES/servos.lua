@@ -73,10 +73,22 @@ local function onClickOverride(field, page)
 end
 
 -- Index N is servo N+1, on a PWM output, a bus channel or both -- which function each one
--- performs is assigned via the mixer rules, not a fixed per-index meaning, so this just
--- labels the servos numerically (1-based for display).
+-- performs is assigned via the mixer rules, not a fixed per-index meaning, so the servos
+-- are labelled by number (1-based for display), with the servo's name after it when it
+-- has one (firmware #286; set in the Configurator, the Ethos suite or the CLI).
 local servoIndexLabels = { [0] = "1" }
 for i = 1, 23 do servoIndexLabels[i] = tostring(i + 1) end
+
+local function setServoNameLabels(names)
+    for i = 0, 23 do
+        local name = names and names[i]
+        if name and name ~= "" then
+            servoIndexLabels[i] = (i + 1) .. " " .. name
+        else
+            servoIndexLabels[i] = tostring(i + 1)
+        end
+    end
+end
 fields[1] = { t = "Servo",      x = x,          y = incY(lineSpacing), sp = x + sp, data = { min = 0, max = 23, table = servoIndexLabels }, postEdit = onChangeServo }
 fields[2] = { t = "Center",     x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMid", preEdit = onPreEditCenter, change = onChangeCenter, postEdit = onPostEditCenter }
 fields[3] = { t = "Min",        x = x + indent, y = incY(lineSpacing), sp = x + sp, id = "servoMin" }
@@ -90,13 +102,18 @@ fields[8] = { t = "[Override All Servos]", x = x + indent * 2, y = incY(lineSpac
 -- The PWM update rate (servo_pwm_rate) is not offered here: 50 Hz suits nearly every
 -- model, and the Configurator's Servos tab sets it for the rest.
 
+local function receivedServoNames(page, names)
+    setServoNameLabels(names)
+    wf.onPageReady(page)
+end
+
 local function receivedServoConfigurations(page, configs)
     servoConfigs = configs
     selectedServoIndex = wf.lastChangedServo or 0
     if selectedServoIndex > #configs then selectedServoIndex = 0 end
     setValues(selectedServoIndex)
     page.fields[1].data.max = #configs
-    wf.onPageReady(page)
+    mspServos.getServoNames(receivedServoNames, page)
 end
 
 return {

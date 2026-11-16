@@ -1,3 +1,8 @@
+# 0.0.43
+
+Use with the 0.0.43 firmware (MSP API 22.16); the 0.0.42 firmware works too, without servo names.
+Add servo names to the Servos and Mixer Rules pages (left out of Mixer Rules on 128 px screens). Firmware without names shows numbers as before.
+
 # 0.0.42
 
 Use with the 0.0.42 firmware (MSP API 22.16); the servo and mixer pages do not match older firmware.

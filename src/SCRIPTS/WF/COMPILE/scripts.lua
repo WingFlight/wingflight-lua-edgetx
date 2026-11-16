@@ -66,6 +66,7 @@ local scripts = {
     "/SCRIPTS/WF/MSP/mspPilotConfig.lua",
     "/SCRIPTS/WF/MSP/mspQueue.lua",
     "/SCRIPTS/WF/MSP/mspRcTuning.lua",
+    "/SCRIPTS/WF/MSP/mspServoRoles.lua",
     "/SCRIPTS/WF/MSP/mspServos.lua",
     "/SCRIPTS/WF/MSP/mspSetProfile.lua",
     "/SCRIPTS/WF/MSP/mspSetRtc.lua",

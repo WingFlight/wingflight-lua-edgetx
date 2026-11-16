@@ -215,6 +215,7 @@ return {
     setMixerCurve = setMixerCurve,
     disableOverride = disableMixerOverride,
     enableOverride = enableMixerOverride,
+    outputNames = outputNames, -- the Mixer Rules page adds the servo roles
     MIXER_INPUT_COUNT = MIXER_INPUT_COUNT,
     MIXER_OUTPUT_RESERVED_FIRST = MIXER_OUTPUT_RESERVED_FIRST,
     MIXER_OUTPUT_RESERVED_LAST = MIXER_OUTPUT_RESERVED_LAST,

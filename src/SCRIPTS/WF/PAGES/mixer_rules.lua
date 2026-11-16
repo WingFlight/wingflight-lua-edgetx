@@ -1,5 +1,8 @@
 local template = wf.executeScript(wf.radio.template)
 local mspMixer = wf.useApi("mspMixer")
+-- Servo roles after the servo outputs, only where they fit; dropped once read.
+local mspServoRoles = LCD_W >= 212 and wf.useApi("mspServoRoles") or nil
+local servoRolesReading = false
 local margin = template.margin
 local indent = template.indent
 local lineSpacing = template.lineSpacing
@@ -70,10 +73,33 @@ fields[8] = { t = "Speed",      x = x + indent, y = incY(lineSpacing), sp = x + 
 fields[9] = { t = "Curve",      x = x + indent, y = incY(lineSpacing), sp = x + sp }
 fields[10] = { t = "Condition", x = x + indent, y = incY(lineSpacing), sp = x + sp }
 
+-- "Servo 1 L Aileron"; firmware without servo roles keeps "Servo 1".
+local function receivedServoRoles(page, values)
+    for i = 0, #values do
+        local label = mspServoRoles.getLabel(values, i)
+        if label ~= "" then
+            mspMixer.outputNames[i + 1] = "Servo " .. (i + 1) .. " " .. label
+        end
+    end
+    fields[4].w = 150
+    mspServoRoles = nil
+    wf.onPageReady(page)
+end
+
+local function servoRolesUnsupported(page)
+    mspServoRoles = nil
+    wf.onPageReady(page)
+end
+
 local function receivedMixerRules(page, receivedRules)
     rules = receivedRules
     setValues(selectedRuleIndex)
-    wf.onPageReady(page)
+    if not mspServoRoles then
+        wf.onPageReady(page)
+    elseif not servoRolesReading then
+        servoRolesReading = true
+        mspServoRoles.read(receivedServoRoles, page, servoRolesUnsupported)
+    end
 end
 
 return {
